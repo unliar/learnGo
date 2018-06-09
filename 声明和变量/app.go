@@ -32,8 +32,8 @@ func main() {
 	fmt.Println(s)
 
 	// 声明多个
-	var i,j, k int
-	fmt.Println(i,j,k)
+	var i, j, k int
+	fmt.Println(i, j, k)
 
 	// 函数内部可以省略var使用类型推断赋值
 	result := addNumber(a, b)
@@ -41,19 +41,35 @@ func main() {
 	fmt.Println(result)
 
 	// 简短变量声明的值多次声明被覆盖
-	ins,ons:=1,2
-	fmt.Println(ins,ons)
+	ins, ons := 1, 2
+	fmt.Println(ins, ons)
 
 	//但是不能一次覆盖两个同名的值
-	insOk,ons:=12,3
-	fmt.Println(insOk,ons)
+	insOk, ons := 12, 3
+	fmt.Println(insOk, ons)
 
 	/* 指针
 
 	一个变量对应保存了对应类型值的内存空间
 
-	只有变量才拥有内存空间,不是所有值都有内存空间比如a.f其实是a的内存空间的值
+	只有变量才拥有内存空间
 
 	一个指针的值实际上是另一个变量的地址如果你知道a变量的地址,那么你可以通过地址获得a.f的值
+
+	聚合类的成员 比如每个字段或者数组每个元素也都对应一个变量所以都可以被取地址
+
 	*/
+
+	// 声明一个变量x
+	x := 199999999
+
+	// 获取变量x的内存地址 赋值给p p的类型为*int
+	p := &x
+	fmt.Println(p)
+
+	//根据内存地址修改x的值
+	*p = 8888888
+
+	// 根据内存地址取值x的值
+	fmt.Println(*p)
 }
