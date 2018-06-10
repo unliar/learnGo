@@ -72,4 +72,11 @@ func main() {
 
 	// 根据内存地址取值x的值
 	fmt.Println(*p)
+
+	// 任何类型的指针的零值都是nil,如果指针不为nil则说明对应地址的值存在
+	// 如果指针指向同一个变量,或者都是nil才相等
+	var n, m string
+
+	fmt.Println(&n == &m, n == m, &n == nil)
+
 }
