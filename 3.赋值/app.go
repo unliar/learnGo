@@ -8,7 +8,7 @@ type Messages struct {
 
 func main() {
 
-	// 赋值
+	// 3.赋值
 
 	//声明并且赋值
 	var x int = 1
