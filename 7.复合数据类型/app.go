@@ -45,6 +45,8 @@ func main() {
 	}
 
 	/*
+	   slice
+
 	   切片Slice代表变长的序列,没个序列中元素都有相同的类型.
 	   slice的语法和数组类似,只是没有固定长度而已
 	   一个切片由指针 长度 和容量组成
@@ -54,8 +56,59 @@ func main() {
 	   slice之间不能比较
 	   slice唯一可以比较的是和nil进行比较
 	*/
+
 	months := []string{"a", "b", "c"}
+
 	// 使用make函数创建一个长度为10的切片,容量为20
 	years := make([]int, 10, 20)
 	fmt.Println(months, years)
+
+	/*
+	 append函数用于向slice增加元素
+	 在每次append之前先检测原有slice是否可容纳元素
+	 如果不是
+	 则自动扩容
+	 自动扩展一个原来两倍的切片
+	 为什么是两倍...因为为了提高内存使用效率,避免频繁复制
+	*/
+	for i := 0; i < 200; i++ {
+		years = append(years, i)
+
+	}
+	fmt.Println(len(years), cap(years))
+
+	/*
+	  Map
+
+	  Go语言中,一个Map就是对哈希表的一个引用map类型写作map[K][V]
+	  map中的所有key,所有value都有相同的数据类型
+	  k必须是支持比较运算符的数据类型,所以可以通过这个来检测某个key是否存在
+	*/
+	maps := map[string]string{
+		"x": "我是猪头",
+		"y": "你才是猪头",
+	}
+	// 取出一个并不存在的key对应的值,返回值有两个z代表值,ok代表是否被赋值
+	z, ok := maps["z"]
+	// map和slice一样也不能进行相等比较
+
+	// Go语言中没有set的概念 但是可以用key去实现,map[string]bool{}
+	// 如果想用slice当key 可以把slice转换成string
+	fmt.Println(maps["x"], z, ok)
+
+	/*
+	 结构体 struct ---->js的对象类似
+
+	 结构体是一种聚合的数据类型
+	 可以由0或者多个任意类型聚合成的实体
+	*/
+	type Emp struct {
+		name  string
+		id    int
+		items map[string]string
+	}
+
+	emp := Emp{name: "天才小学生", id: 1, items: maps}
+
+	fmt.Println(emp.items["x"])
 }
