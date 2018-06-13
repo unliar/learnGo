@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 /*
 数组和结构体都有固定内存大小的数据结构
@@ -106,9 +109,25 @@ func main() {
 		name  string
 		id    int
 		items map[string]string
+		time  time.Time
 	}
 
-	emp := Emp{name: "天才小学生", id: 1, items: maps}
+	emp := Emp{name: "天才小学生", id: 1, items: maps, time: time.Now()}
+	// 访问time字段
+	fmt.Println(emp.time)
+	// 取出time字段的地址然后访问
+	pTime := &emp.time
+	fmt.Println(*pTime)
+	// 完整结构体指针访问
+	pEmp := &emp
+	fmt.Println(pEmp.name)
 
-	fmt.Println(emp.items["x"])
+	//通常一个结构体的成员名字在前 类型在后 但是如果相邻的成员类型相同可以合并到一行
+	// 结构体的字段顺序不一样会产生不同的结构体类型
+	type Cp struct {
+		x, y, z int
+	}
+	cp := Cp{1, 2, 3}
+
+	fmt.Println(*&cp.x)
 }
