@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -130,4 +132,29 @@ func main() {
 	cp := Cp{1, 2, 3}
 
 	fmt.Println(*&cp.x)
+
+	/*
+	 json
+
+	 json表示一组发送和接受结构化信息的标准协议
+
+	*/
+
+	// json结构体的字段首字母必须是大写
+	// json:x 别名 omitempty 表示可为空,
+	type codes struct {
+		X int    `json:"x"`
+		Y string `json:"y,omitempty"`
+	}
+	movies := []codes{
+		{16, "qqqqAAA"},
+		{15, ""},
+		{12, "qqqqTTT"},
+		{11, "qqqq666"},
+	}
+	data, err := json.Marshal(movies)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%s", data)
 }
