@@ -143,18 +143,22 @@ func main() {
 	// json结构体的字段首字母必须是大写
 	// json:x 别名 omitempty 表示可为空,
 	type codes struct {
-		X int    `json:"x"`
-		Y string `json:"y,omitempty"`
+		X  int    `json:"x"`
+		Y  string `json:"y,omitempty"`
+		Tx string
 	}
 	movies := []codes{
-		{16, "qqqqAAA"},
-		{15, ""},
-		{12, "qqqqTTT"},
-		{11, "qqqq666"},
+		{16, "qqqqAAA", "dddd"},
+		{15, "", "dddd"},
+		{12, "qqqqTTT", "dddd"},
+		{11, "qqqq666", "dddd"},
 	}
+	// 将movies序列话
 	data, err := json.Marshal(movies)
 	if err != nil {
 		log.Fatal(err)
 	}
+	datas, err := json.MarshalIndent(movies, "", "    ")
 	fmt.Printf("%s", data)
+	fmt.Printf("%s", datas)
 }
