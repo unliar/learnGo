@@ -28,6 +28,7 @@ func (v *V) Sum() int {
 // 接口类型的值 可以保存任何实现了这些方法的值
 type Abser interface {
 	Abs() float64
+	Show()
 }
 type MyFloat float64
 
@@ -40,6 +41,13 @@ func (f MyFloat) Abs() float64 {
 }
 func (s MyStruct) Abs() float64 {
 	return s.X + s.Y
+}
+func (f MyFloat) Show() {
+	fmt.Println(f)
+}
+
+func (s MyStruct) Show() {
+	fmt.Println(s.X, s.Y)
 }
 func main() {
 	// 普通接收者
@@ -61,6 +69,11 @@ func main() {
 
 	bb = ms
 	fmt.Println(bb.Abs())
+
+	aa.Show()
+
+	bb.Show()
+
 	fmt.Println(aa)
 	fmt.Println(a, ss)
 }
