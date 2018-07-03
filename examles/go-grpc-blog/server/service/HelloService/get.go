@@ -2,7 +2,7 @@ package HelloService
 
 import (
 	"context"
-	"go-grpc-blog/proto/Message"
+	"learnGo/examles/go-grpc-blog/proto/Message"
 )
 
 type Server struct {
