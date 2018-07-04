@@ -3,6 +3,16 @@
 	"ignore": "test",
 	"package": [
 		{
+			"path": "appengine/cloudsql",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "W+IoIME5mgWjwU+dOlh3DZEZEN4=",
+			"path": "github.com/go-sql-driver/mysql",
+			"revision": "749ddf1598b47e3cd909414bda735fe790ef3d30",
+			"revisionTime": "2018-06-18T11:59:01Z"
+		},
+		{
 			"checksumSHA1": "JZV+pLo8Z/kIYExrZr1Zu9KSKyU=",
 			"path": "github.com/golang/protobuf/proto",
 			"revision": "9eb2c01ac278a5d89ce4b2be68fe4500955d8179",
@@ -43,6 +53,18 @@
 			"path": "github.com/golang/protobuf/ptypes/wrappers",
 			"revision": "9eb2c01ac278a5d89ce4b2be68fe4500955d8179",
 			"revisionTime": "2018-06-22T17:40:09Z"
+		},
+		{
+			"checksumSHA1": "w3QCCIYHgZzIXQ+xTl7oLfFrXHs=",
+			"path": "github.com/gomodule/redigo/internal",
+			"revision": "2cd21d9966bf7ff9ae091419744f0b3fb0fecace",
+			"revisionTime": "2018-06-27T14:45:07Z"
+		},
+		{
+			"checksumSHA1": "To/N5YA/FD0Rrs6r2OOmHXgxYwI=",
+			"path": "github.com/gomodule/redigo/redis",
+			"revision": "2cd21d9966bf7ff9ae091419744f0b3fb0fecace",
+			"revisionTime": "2018-06-27T14:45:07Z"
 		},
 		{
 			"path": "golang.org/x/net/context",
@@ -104,6 +126,12 @@
 			"revision": ""
 		},
 		{
+			"checksumSHA1": "LiyXfqOzaeQ8vgYZH3t2hUEdVTw=",
+			"path": "google.golang.org/appengine/cloudsql",
+			"revision": "b1f26356af11148e710935ed1ac8a7f5702c7612",
+			"revisionTime": "2018-05-21T22:34:13Z"
+		},
+		{
 			"checksumSHA1": "Qq5ptZpl4CBWN8TFgprqcbGGzYw=",
 			"path": "google.golang.org/genproto/googleapis/rpc/errdetails",
 			"revision": ""
@@ -118,5 +146,5 @@
 			"revision": ""
 		}
 	],
-	"rootPath": "go-grpc-blog"
+	"rootPath": "learnGo/examles/go-grpc-blog"
 }
