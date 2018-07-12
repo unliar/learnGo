@@ -23,9 +23,9 @@ import "fmt"
 
 */
 
-func Count(ch chan int) {
+func Count(ch chan int, i int) {
+	ch <- i
 	fmt.Println("counting--->")
-	ch <- 1
 }
 
 func main() {
@@ -34,10 +34,11 @@ func main() {
 
 	for i := 0; i < 10; i++ {
 		chs[i] = make(chan int)
-		go Count(chs[i])
+		go Count(chs[i], i)
 	}
 
 	for _, ch := range chs {
-		<-ch
+		i := <-ch
+		fmt.Println(i)
 	}
 }
