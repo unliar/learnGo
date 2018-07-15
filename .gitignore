@@ -1,3 +1,5 @@
 .idea/
 .vscode/
 node_modules/
+examples/gp-curl/temp/
+examples/gp-grpc-blog/temp/
