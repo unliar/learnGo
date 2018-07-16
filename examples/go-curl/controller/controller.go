@@ -2,7 +2,8 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"gp-curl/service"
+
+	"learnGo/examples/go-curl/service"
 	"net/http"
 	"strconv"
 )

@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"learnGo/examples/go-curl/conf"
 	"log"
 )
 
@@ -10,7 +11,7 @@ var MySQL *sql.DB
 
 func init() {
 	var err error
-	MySQL, err = sql.Open("mysql", "root:MySQL19930224@tcp(127.0.0.1:3306)/go-server")
+	MySQL, err = sql.Open("mysql", conf.CurrentConf.MySQL)
 	if err != nil {
 		log.Fatal(err)
 		panic(err.Error())

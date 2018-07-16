@@ -1,7 +1,7 @@
 package service
 
 import (
-	db2 "gp-curl/db"
+	db2 "learnGo/examples/go-curl/db"
 	"log"
 )
 

@@ -3,7 +3,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"gp-curl/controller"
+	"learnGo/examples/go-curl/controller"
 )
 
 func InitRoute() *gin.Engine {
