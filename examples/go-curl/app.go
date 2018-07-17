@@ -8,8 +8,13 @@ import (
 )
 
 func main() {
-	gin.SetMode(conf.CurrentConf.Mode)
+	mode := conf.CurrentConf.Mode
+	// 设置mode
+	gin.SetMode(mode)
+	// 非debug模式不打印彩色
+	if mode != "debug" {
+		gin.DisableConsoleColor()
+	}
 	r := router.InitRoute()
-
 	r.Run(conf.CurrentConf.Port)
 }
