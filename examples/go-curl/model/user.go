@@ -9,9 +9,11 @@ type UserBase struct {
 	Nickname string `json:"nickname"` 		// 用户昵称
 	Age  int    `json:"age"` 				// 用户年龄
 	Male string `json:"male"` 				// 用户性别
-	Location string `json:"location"`   	// 用户的位置信息
+	Avatar string `json:"avatar"`           // 头像信息
+ 	Location string `json:"location"`   	// 用户的位置信息
 	Profession string `json:"profession"`   // 用户的职业信息
 	Status int `json:"status"`              // 用户的可用状态
+	Token string `json:"token"`             // 用户的当前登录token
 	UpdateTime string `json:"update_time"`	// 更新时间
 	CreateTime string `json:"create_time"`  // 创建时间
 }
@@ -29,18 +31,18 @@ type UserAuth struct {
 
 // UserDataStatistics 是用户的数据统计
 type UserDataStatistics struct {
-	Id int	`json:"id"` 							// 自增id
-	Uid int `json:"uid"` 							// 对应的用户id
-	FollowCount int `json:"follow_count"`   		// 关注的人个数
-	FansCount int `json:"fans_count"`       		// 粉丝个数
-	CommentSendCount int `json:"comment_send_count"` // 发出评论个数
-	CommentGetCount int `json:"comment_get_count"`   // 获得评论个数
-	LikeSendCount int `json:"like_send_count"`       // 发出点赞个数
-	likeGetCount int `json:"like_get_count"`         // 获得点赞个数
-	CollectionSendCount int `json:"collection_send_count"`    // 发出收藏个数
-	CollectionGetCount int `json:"collection_get_count"`      // 获得收藏个数
-	UpdateTime string `json:"update_time"`                    // 更新时间
-	CreateTime string `json:"create_time"`                    // 创建时间
+	Id int	`json:"id"` 										// 自增id
+	Uid int `json:"uid"` 										// 对应的用户id
+	FollowCount int `json:"follow_count"`   					// 关注的人个数
+	FansCount int `json:"fans_count"`       					// 粉丝个数
+	CommentSendCount int `json:"comment_send_count"` 			// 发出评论个数
+	CommentGetCount int `json:"comment_get_count"`   			// 获得评论个数
+	LikeSendCount int `json:"like_send_count"`       			// 发出点赞个数
+	likeGetCount int `json:"like_get_count"`         			// 获得点赞个数
+	CollectionSendCount int `json:"collection_send_count"`      // 发出收藏个数
+	CollectionGetCount int `json:"collection_get_count"`        // 获得收藏个数
+	UpdateTime string `json:"update_time"`                      // 更新时间
+	CreateTime string `json:"create_time"`                      // 创建时间
  }
 
 // UserAccountBind 是第三方账户的绑定信息
@@ -55,4 +57,6 @@ type UserDataStatistics struct {
 	 WeChatId string `json:"we_chat_id""`           // 微信id
 	 WeiBoId string `json:"wei_bo_id"`              // 微博id
 	 QQId string `json:"qq_id"`                     // QQ id
+	 UpdateTime string `json:"update_time"`         // 更新时间
+	 CreateTime string `json:"create_time"`         // 创建时间
  }
