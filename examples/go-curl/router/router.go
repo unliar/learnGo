@@ -8,8 +8,10 @@ import (
 
 func InitRoute() *gin.Engine {
 	router := gin.Default()
+	router.Use(gin.Recovery())
 	router.GET("/", controller.HomeController)
-	router.GET("/users/:id", controller.UserController)
-	router.GET("/users", controller.UsersQueryByAge)
+	//router.GET("/api/users/:id", controller.UserController)
+	//router.GET("/api/users", controller.UsersQueryByAge)
+	router.POST("/api/users/login", controller.UserSignInByLoginName)
 	return router
 }

@@ -5,19 +5,30 @@ import (
 	"learnGo/examples/go-curl/model"
 )
 
-//type User struct {
-//	Id   int    `json:"id" `
-//	Name string `json:"name"`
-//	Age  int    `json:"age"`
-//	Male string `json:"male"`
-//}
-
 var db = db2.MySQL
 
 // SignInByLoginName 是用账户名登录
-func SignInByLoginName(user string,password string) model.UserBase  {
-	
+func SignInByLoginName(user string, password string) (*model.UserBase, error) {
+	ub := model.UserBase{}
+	ua := model.UserAuth{}
+
+	tub := db.QueryRow("select * from t_user_base where login_name = ? limit 1", user)
+	err := tub.Scan(&ub)
+
+	if err != nil {
+		return nil, err
+	}
+
+	tua := db.QueryRow("select * from t_user_auth where uid = ? and password=? and is_current=1 limit 1", ub.Id, password)
+	err = tua.Scan(&ua)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ub, nil
 }
+
 ////根据id获取指定的用户信息
 //func (u *User) GetUserById() (*User, error) {
 //	row := db.QueryRow("select * from user_message where id= ?", u.Id)
