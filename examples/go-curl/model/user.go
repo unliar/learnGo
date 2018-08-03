@@ -53,8 +53,8 @@ type UserAccountBind struct {
 	EmailStatus int    `json:"email_status"`  // 邮箱状态
 	PhoneType   int    `json:"phone_type"`    // 手机区号
 	Phone       string `json:"phone"`         // 手机号码
-	PhoneStatus int    `json:"phone_status""` // 手机状态
-	WeChatId    string `json:"we_chat_id""`   // 微信id
+	PhoneStatus int    `json:"phone_status"` // 手机状态
+	WeChatId    string `json:"we_chat_id"`   // 微信id
 	WeiBoId     string `json:"wei_bo_id"`     // 微博id
 	QQId        string `json:"qq_id"`         // QQ id
 	UpdateTime  string `json:"update_time"`   // 更新时间
