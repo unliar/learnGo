@@ -12,15 +12,15 @@ func SignInByLoginName(user string, password string) (*model.UserBase, error) {
 	ub := model.UserBase{}
 	ua := model.UserAuth{}
 
-	tub := db.QueryRow("select * from t_user_base where login_name = ? limit 1", user)
-	err := tub.Scan(&ub)
+	tub := db.QueryRow("select id,name,nickname,age,male,login_name from t_user_base where login_name = ? limit 1", user)
+	err := tub.Scan(&ub.Id,&ub.LoginName,&ub.Nickname,&ub.Age)
 
 	if err != nil {
 		return nil, err
 	}
 
-	tua := db.QueryRow("select * from t_user_auth where uid = ? and password=? and is_current=1 limit 1", ub.Id, password)
-	err = tua.Scan(&ua)
+	tua := db.QueryRow("select id,uid,is_current from t_user_auth where uid = ? and password=? and is_current=1 limit 1", ub.Id, password)
+	err = tua.Scan(&ua.Id,&ua.Uid,&ua.IsCurrent)
 
 	if err != nil {
 		return nil, err
