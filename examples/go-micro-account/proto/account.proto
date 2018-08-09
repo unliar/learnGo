@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package account;
+
+// 用户基础信息
+message UserBase {
+    int64 Id            = 1; // id
+    string LoginName    = 2; // 登录名
+    string IDC          = 3; // 身份证
+    string Nickname     = 4; // 昵称
+    int64 Age           = 5; // 年龄
+    string Male         = 6; // 性别
+    string Avatar       = 7; // 头像
+    string Location     = 8; // 位置
+    string Profession   = 9; // 职业
+    int64  Status       = 10; // 状态
+    string CreateTime   = 11; // 创建时间
+}
+
+// 用户的第三方账户信息
+
+message UserContact {
+    int64 Id            = 1; // id
+    string Email        = 2; // 邮箱
+    string Phone        = 3; // 手机号
+    string WeChatId     = 4; // 微信号
+    string WeiBoId      = 5; // 微博
+    string QQId         = 6; // qq
+    
+}
+
+// 用户信息
+message UserInfo{
+    UserBase base          = 1; // 基础信息
+    UserContact contact    = 2; // 社交联系 
+}
+
+
+// id查询用户信息
+message UserId {
+    int64 UID           = 1; // 用户id
+}
+
+service AccountSV {
+
+    // 查询用户基础信息和用户社交联系方式
+    rpc GetUserInfo (UserId) returns (UserInfo);
+
+    // 查询用户基础信息
+    rpc GetUserBase (UserId) returns (UserBase);
+
+    // 查询用户联系方式信息
+    rpc GetUserContact (UserId) returns (UserContact);
+
+}
