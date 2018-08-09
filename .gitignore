@@ -2,4 +2,8 @@
 .vscode/
 node_modules/
 examples/gp-curl/temp/
+examples/gp-curl/vendor/*
 examples/gp-grpc-blog/temp/
+examples/gp-grpc-blog/vendor/*
+examples/go-micro-account/temp/*
+examples/go-micro-account/vendor/*
