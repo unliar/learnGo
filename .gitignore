@@ -7,3 +7,6 @@ examples/gp-grpc-blog/temp/
 examples/gp-grpc-blog/vendor/*
 examples/go-micro-account/temp/*
 examples/go-micro-account/vendor/*
+examples/go-micro-api/vendor/github.com/*
+examples/go-micro-api/vendor/golang.org/*
+examples/go-micro-api/vendor/gopkg.in/*
