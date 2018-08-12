@@ -11,10 +11,14 @@ if [ $# == 1 ] && [ $1 == "dev" ]
         else
             echo "当前ip为空，使用默认值$CONSUL"
         fi
+        echo "当前注册中心ip---->$CONSUL"
+        CONSUL_HTTP_ADDR=$CONSUL go run app.go  --registry=consul --registry_address=$CONSUL --selector=cache --server=grpc --client=grpc
 else
     echo "start production mode"
     CONSUL=$1
+    echo "当前注册中心ip---->$CONSUL"
+    go build app.go
+    CONSUL_HTTP_ADDR=$CONSUL    ./app --registry=consul --registry_address=$CONSUL --selector=cache --server=grpc --client=grpc
 fi
 
-echo "当前注册中心ip---->$CONSUL"
-CONSUL_HTTP_ADDR=$CONSUL go run app.go  --registry=consul --registry_address=$CONSUL --selector=cache --server=grpc --client=grpc
+
