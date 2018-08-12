@@ -34,7 +34,7 @@ type UserContact struct {
 func init() {
 	fmt.Println("db start init")
 	var err error
-	DB, err = gorm.Open("mysql", "root:MySQL19930224@tcp(127.0.0.1:3306)/go-server?parseTime=true")
+	DB, err = gorm.Open("mysql", "root:MySQL19930224@tcp(127.0.0.1:3306)/go-server?parseTime=true&loc=Local")
 	DB.LogMode(true)
 	if !DB.HasTable(&UserBase{}) {
 		fmt.Println("db UserBase need to create")
