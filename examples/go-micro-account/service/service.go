@@ -3,6 +3,7 @@ package service
 import "context"
 import (
 	proto "github.com/unliar/proto/account"
+	"time"
 )
 
 type Account struct {
@@ -23,7 +24,15 @@ func (a *Account) GetUserInfo(ctx context.Context, req *proto.UserId, rsp *proto
 
 // GetUserBase 是用来获取用户基础信息的接口
 func (a *Account) GetUserBase(ctx context.Context, req *proto.UserId, rsp *proto.UserBase) error {
-	rsp.Nickname = "qq"
+	ub := proto.UserBase{}
+	var dub UserBase
+	DB.First(&dub, "id = ?", req.UID)
+	ub.Nickname = dub.Nickname
+	ub.LoginName = dub.LoginName
+	ub.Id = int64(dub.ID)
+	ub.Status = dub.Status
+	ub.Male = dub.Male
+	rsp = &ub
 	return nil
 }
 
@@ -35,7 +44,27 @@ func (a *Account) GetUserContact(ctx context.Context, req *proto.UserId, rsp *pr
 
 // PostUserBase 是用来创建用户基础信息的接口
 func (a *Account) PostUserBase(ctx context.Context, req *proto.UserBase, rsp *proto.ResponseStatus) error {
-	rsp.ErrMsg = "you bad bad PostUserBase"
+
+	if len(req.Nickname) == 0 || len(req.LoginName) == 0 {
+		rsp.Status = 2
+		rsp.ErrMsg = "参数不合法"
+		return nil
+	}
+
+	var dub UserBase
+	dub.UpdatedAt = time.Now()
+	dub.CreatedAt = time.Now()
+	dub.Avatar = req.Avatar
+	dub.Status = 1
+	dub.Male = req.Male
+	dub.LoginName = req.LoginName
+	err := DB.Create(&dub).Error
+	if err != nil {
+		rsp.Status = 2
+		rsp.ErrMsg = err.Error()
+	}
+	rsp.Status = 1
+	rsp.ErrMsg = "fine"
 	return nil
 }
 
