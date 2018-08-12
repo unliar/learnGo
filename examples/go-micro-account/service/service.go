@@ -2,8 +2,9 @@ package service
 
 import "context"
 import (
-	proto "github.com/unliar/proto/account"
 	"time"
+
+	proto "github.com/unliar/proto/account"
 )
 
 type Account struct {
@@ -24,15 +25,13 @@ func (a *Account) GetUserInfo(ctx context.Context, req *proto.UserId, rsp *proto
 
 // GetUserBase 是用来获取用户基础信息的接口
 func (a *Account) GetUserBase(ctx context.Context, req *proto.UserId, rsp *proto.UserBase) error {
-	ub := proto.UserBase{}
 	var dub UserBase
 	DB.First(&dub, "id = ?", req.UID)
-	ub.Nickname = dub.Nickname
-	ub.LoginName = dub.LoginName
-	ub.Id = int64(dub.ID)
-	ub.Status = dub.Status
-	ub.Male = dub.Male
-	rsp = &ub
+	rsp.Nickname = dub.Nickname
+	rsp.LoginName = dub.LoginName
+	rsp.Id = int64(dub.ID)
+	rsp.Status = dub.Status
+	rsp.Male = dub.Male
 	return nil
 }
 
@@ -62,6 +61,7 @@ func (a *Account) PostUserBase(ctx context.Context, req *proto.UserBase, rsp *pr
 	if err != nil {
 		rsp.Status = 2
 		rsp.ErrMsg = err.Error()
+		return nil
 	}
 	rsp.Status = 1
 	rsp.ErrMsg = "fine"
