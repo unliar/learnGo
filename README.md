@@ -4,9 +4,11 @@
 
 ## examples
 
-- go-curl 一个简单的多人博客 api 项目
+- go-curl 一个<del>简单</del>>的多人博客 api 项目
 
-- go-grpc-blog 打算用 grpc 复用上个项目的数据
+- go-micro-account account 微服务模块
+
+- go-micro-api 所有微服务的 restful 接口
 
 ## turial
 
