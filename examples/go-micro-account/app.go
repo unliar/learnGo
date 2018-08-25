@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/micro/go-micro"
-	proto "github.com/unliar/proto/account"
 	SV "learnGo/examples/go-micro-account/service"
 	"time"
+
+	"github.com/micro/go-micro"
+	proto "github.com/unliar/proto/account"
 )
 
 func main() {
