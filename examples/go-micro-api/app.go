@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/micro/go-web"
 	ac "learnGo/examples/go-micro-api/account"
 	"log"
+
+	"github.com/gin-gonic/gin"
+	"github.com/micro/go-web"
 )
 
 func main() {
@@ -20,8 +21,28 @@ func main() {
 	service.Init()
 
 	r := gin.Default()
+	// 健康检查api
 	r.GET("/api/health", ac.GetHealthStatus)
+	// 用户信息
 	r.GET("/api/users/:uid", ac.GetUserBase)
+	// 注册用户
+	r.POST("/api/users", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"ok": 1,
+		})
+	})
+	// 修改用户信息
+	r.PUT("/api/users", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"ok": 1,
+		})
+	})
+	// 获取登录token
+	r.POST("/api/tokens", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"ok": 1,
+		})
+	})
 
 	service.Handle("/", r)
 
