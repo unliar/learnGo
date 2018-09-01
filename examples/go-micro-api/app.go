@@ -5,7 +5,15 @@ import (
 	"github.com/micro/go-web"
 	ac "learnGo/examples/go-micro-api/account"
 	"log"
+	"time"
 )
+
+type ErrorMsg struct {
+	Code    int64  `json:"code"`
+	Detail  string `json:"detail"`
+	Time    int64  `json:"time"`
+	Message string `json:"message"`
+}
 
 func main() {
 	var err error
@@ -20,6 +28,19 @@ func main() {
 	service.Init()
 
 	r := gin.Default()
+	// 404 error
+	r.NoRoute(func(context *gin.Context) {
+		context.JSON(404, gin.H{
+			"statusCode": 404,
+			"data":       nil,
+			"error": ErrorMsg{
+				Code:    999,
+				Detail:  "what'up? you may have the wrong api path!",
+				Time:    time.Now().Unix(),
+				Message: "failed",
+			},
+		})
+	})
 	// 健康检查api
 	r.GET("/api/health", ac.GetHealthStatus)
 	// 用户信息
