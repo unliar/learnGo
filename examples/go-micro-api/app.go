@@ -21,7 +21,7 @@ func main() {
 
 	r := gin.Default()
 	r.GET("/api/health", ac.GetHealthStatus)
-	r.GET("/api/user/:uid", ac.GetUserBase)
+	r.GET("/api/users/:uid", ac.GetUserBase)
 
 	service.Handle("/", r)
 

@@ -13,7 +13,7 @@ func main() {
 	var err error
 	service := micro.NewService(
 		micro.Name("unliar-account"),
-		micro.Version("beta-1.0.1"),
+		micro.Version("beta-1.1.1"),
 		micro.RegisterInterval(time.Second*15),
 		micro.RegisterTTL(time.Second*30),
 	)
