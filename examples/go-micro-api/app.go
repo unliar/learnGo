@@ -1,11 +1,10 @@
 package main
 
 import (
-	ac "learnGo/examples/go-micro-api/account"
-	"log"
-
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-web"
+	ac "learnGo/examples/go-micro-api/account"
+	"log"
 )
 
 func main() {
@@ -31,13 +30,19 @@ func main() {
 			"ok": 1,
 		})
 	})
-	// 修改用户信息
-	r.PUT("/api/users", func(c *gin.Context) {
+	// 修改用户基础信息
+	r.PUT("/api/users/:uid/baseInfo", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"ok": 1,
 		})
 	})
-	// 获取登录token
+	// 修改用户联系信息
+	r.PUT("/api/users/:uid/userContact", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"ok": 1,
+		})
+	})
+	// 创建||刷新登录token
 	r.POST("/api/tokens", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"ok": 1,
