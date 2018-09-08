@@ -1,10 +1,12 @@
 package service
 
-import "context"
 import (
+	"context"
+	"fmt"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
+
 	proto "github.com/unliar/proto/account"
 )
 
@@ -18,7 +20,7 @@ type Account struct {
 // Payload 是用来发token的
 type Payload struct {
 	UID    int64 `json:"uid"`
-	Status int64 `json:"userStatus"`
+	Status int32 `json:"userStatus"`
 	jwt.StandardClaims
 }
 
@@ -60,5 +62,21 @@ func (a *Account) GetToken(ctx context.Context, req *proto.UserInfo, rsp *proto.
 // CheckToken 是用来检测用户token
 func (a *Account) CheckToken(ctx context.Context, req *proto.TokenInput, rsp *proto.ResponseStatus) error {
 
+	token, err := jwt.ParseWithClaims(req.Token, &Payload{}, func(token *jwt.Token) (interface{}, error) {
+		return SignKey, nil
+	})
+	if err != nil {
+		rsp.ErrMsg = "Parse Token error"
+		rsp.Status = 2
+		return nil
+	}
+	if claims, ok := token.Claims.(*Payload); ok && token.Valid {
+		fmt.Println(claims.UID, claims.Status, claims)
+		rsp.Status = 1
+		rsp.ErrMsg = ""
+		return nil
+	}
+	rsp.Status = 2
+	rsp.ErrMsg = "Token not ok"
 	return nil
 }

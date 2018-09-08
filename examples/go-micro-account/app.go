@@ -15,7 +15,7 @@ func main() {
 		micro.Name("unliar-account"),
 		micro.Version("beta-1.1.1"),
 		micro.RegisterInterval(time.Second*15),
-		micro.RegisterTTL(time.Second*30),
+		micro.RegisterTTL(time.Second*15),
 	)
 	service.Init()
 	proto.RegisterAccountSVHandler(service.Server(), new(SV.Account))
