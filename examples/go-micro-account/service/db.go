@@ -2,33 +2,38 @@ package service
 
 import (
 	"fmt"
+
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/mysql" // msql
 )
 
+// DB 是当前数据的实例
 var DB *gorm.DB
 
-type UserBase struct {
+// UserInfo 用户信息model
+type UserInfo struct {
 	gorm.Model
-	LoginName  string `gorm:"unique";NOT NULL;"`
-	IDC        string `gorm:"DEFAULT:'';"`
-	Nickname   string `gorm:"UNIQUE";NOT NULL"`
-	Age        int64  `gorm:"DEFAULT:0"`
-	Male       string `gorm:"size:6"`
-	Avatar     string `gorm:"size:255"`
+	LoginName  string `gorm:"UNIQUE;NOT NULL;"`
+	Nickname   string `gorm:"UNIQUE;NOT NULL"`
+	Age        int64  `gorm:"DEFAULT:18"`
+	Gender     int64  `gorm:"DEFAULT:0"`
+	Avatar     string `gorm:"DEFAULT:''"`
 	Location   string `gorm:"DEFAULT:'shenzhen'"`
 	Profession string `gorm:"DEFAULT:''"`
 	Status     int64  `gorm:"DEFAULT:1"`
+	Phone      string `gorm:"DEFAULT:''"`
+	Email      string `gorm:"DEFAULT:''"`
+	WeChatId   string `gorm:"DEFAULT:''"`
+	QQId       string `gorm:"DEFAULT:''"`
+	Brief      string `gorm:"DEFAULT:''"`
+	NationCode string `gorm:"DEFAULT:'86'"`
 }
 
-type UserContact struct {
+// UserPass 用户密码
+type UserPass struct {
 	gorm.Model
-	UID      int64  `gorm:"unique";`
-	Email    string `gorm:"DEFAULT:''"`
-	Phone    string `gorm:"DEFAULT:''"`
-	WeChatId string `gorm:"DEFAULT:''"`
-	WeiBoId  string `gorm:"DEFAULT:''"`
-	QQId     string `gorm:"DEFAULT:''"`
+	UID      int64  `gorm:"UNIQUE;NOT NULL;"`
+	Password string `gorm:"NOT NULL"`
 }
 
 func init() {
@@ -36,15 +41,15 @@ func init() {
 	var err error
 	DB, err = gorm.Open("mysql", "root:MySQL19930224@tcp(127.0.0.1:3306)/go-server?parseTime=true&loc=Local")
 	DB.LogMode(true)
-	if !DB.HasTable(&UserBase{}) {
+	if !DB.HasTable(&UserInfo{}) {
 		fmt.Println("db UserBase need to create")
 		err = DB.Set("gorm:table_options", "ENGINE=InnoDB").
-			CreateTable(&UserBase{}).Error
+			CreateTable(&UserInfo{}).Error
 	}
-	if !DB.HasTable(&UserContact{}) {
+	if !DB.HasTable(&UserPass{}) {
 		fmt.Println("db UserContact need to create")
 		err = DB.Set("gorm:table_options", "ENGINE=InnoDB").
-			CreateTable(&UserContact{}).Error
+			CreateTable(&UserPass{}).Error
 	}
 	if err != nil {
 		panic(err)
