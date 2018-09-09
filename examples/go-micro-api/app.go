@@ -9,6 +9,7 @@ import (
 	"github.com/micro/go-web"
 )
 
+// ErrorMsg 错误信息
 type ErrorMsg struct {
 	Code    int64  `json:"code"`
 	Detail  string `json:"detail"`
@@ -44,26 +45,14 @@ func main() {
 	})
 	// 健康检查api
 	r.GET("/api/health", ac.GetHealthStatus)
-	// 用户信息
+	// 获取用户信息
 	r.GET("/api/users/:uid", ac.GetUserInfo)
 	// 注册用户
-	r.POST("/api/users", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"ok": 1,
-		})
-	})
+	r.POST("/api/users", ac.PostUserInfo)
 	// 修改用户基础信息
-	r.PUT("/api/users/:uid/baseInfo", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"ok": 1,
-		})
-	})
+	r.PUT("/api/users", ac.UpdateUserInfo)
 	// 修改用户联系信息
-	r.PUT("/api/users/:uid/userContact", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"ok": 1,
-		})
-	})
+
 	// 创建||刷新登录token
 	r.POST("/api/tokens", func(c *gin.Context) {
 		c.JSON(200, gin.H{

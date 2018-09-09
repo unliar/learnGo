@@ -64,6 +64,20 @@ func GetUserInfo(c *gin.Context) {
 	})
 }
 
+// PostUserInfo 创建用户
+func PostUserInfo(c *gin.Context) {
+	c.JSON(200, &APIRSP{
+		StatusCode: 200,
+	})
+}
+
+// UpdateUserInfo 更新用户信息
+func UpdateUserInfo(c *gin.Context) {
+	c.JSON(200, &APIRSP{
+		StatusCode: 200,
+	})
+}
+
 // GetHealthStatus 用于获取服务状态
 func GetHealthStatus(c *gin.Context) {
 	c.JSON(200, gin.H{
