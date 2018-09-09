@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/micro/go-web"
 	ac "learnGo/examples/go-micro-api/account"
 	"log"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/micro/go-web"
 )
 
 type ErrorMsg struct {
@@ -44,7 +45,7 @@ func main() {
 	// 健康检查api
 	r.GET("/api/health", ac.GetHealthStatus)
 	// 用户信息
-	r.GET("/api/users/:uid", ac.GetUserBase)
+	r.GET("/api/users/:uid", ac.GetUserInfo)
 	// 注册用户
 	r.POST("/api/users", func(c *gin.Context) {
 		c.JSON(200, gin.H{
