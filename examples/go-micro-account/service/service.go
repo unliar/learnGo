@@ -157,3 +157,23 @@ func (a *Account) CheckToken(ctx context.Context, req *proto.TokenInput, rsp *pr
 	rsp.ErrMsg = "Token not ok"
 	return nil
 }
+
+// CheckNickname 是用来检测用户昵称
+func (a *Account) CheckNickname(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
+	return nil
+}
+
+// UpdatePassword 是更新用户密码的接口
+func (a *Account) UpdatePassword(ctx context.Context, req *proto.UpdatePassInput, rsp *proto.ResponseStatus) error {
+	return nil
+}
+
+// CheckLoginName 是检查登录名称的接口
+func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus)error {
+	return nil
+}
+
+// CheckPhone 是检查手机号的接口
+func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus)error {
+	return nil
+}
