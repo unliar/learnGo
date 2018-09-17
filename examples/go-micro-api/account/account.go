@@ -2,6 +2,7 @@ package account
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ var (
 	AccountSVService ASV.AccountSVService
 )
 
-// Resp api错误返回值
+// APIRSP api错误返回值
 type APIRSP struct {
 	StatusCode int64       `json:"statusCode"`
 	Detail     interface{} `json:"detail"`
@@ -84,4 +85,35 @@ func GetHealthStatus(c *gin.Context) {
 		"status":  200,
 		"message": "api server ok",
 	})
+}
+
+// PostToken 是用来获取登录token凭证的
+func PostToken(c *gin.Context) {
+	//如果当前token合法 就获取一个新的token
+	//如果当前token不合法就获取账户密码
+	Token, err := c.Request.Cookie("USER_TOKEN")
+	fmt.Println("isok", Token)
+	if err != nil {
+		c.JSON(403, &APIRSP{
+			StatusCode: 403,
+			Detail:     "NO TOKEN",
+		})
+		return
+	}
+	rsp, err := AccountSVService.CheckToken(context.TODO(), &ASV.TokenInput{
+		Token: Token.String(),
+	})
+	if err != nil || rsp.Status != 1 {
+		c.JSON(400, &APIRSP{
+			StatusCode: 403,
+			Detail:     "call CheckToken error ",
+		})
+		return
+	}
+	c.JSON(200, &APIRSP{
+		StatusCode: 200,
+		Detail:     "OK",
+		Result:     rsp,
+	})
+
 }

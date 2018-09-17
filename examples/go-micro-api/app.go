@@ -54,11 +54,7 @@ func main() {
 	// 修改用户联系信息
 
 	// 创建||刷新登录token
-	r.POST("/api/tokens", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"ok": 1,
-		})
-	})
+	r.POST("/api/tokens", ac.PostToken)
 
 	service.Handle("/", r)
 
