@@ -169,11 +169,18 @@ func (a *Account) UpdatePassword(ctx context.Context, req *proto.UpdatePassInput
 }
 
 // CheckLoginName 是检查登录名称的接口
-func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus)error {
+func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
 	return nil
 }
 
 // CheckPhone 是检查手机号的接口
-func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus)error {
+func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
+	return nil
+}
+
+// GetUserInfoByToken 是用token获取用户信息的接口
+func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput, rsp *proto.UserInfoByTokenResponse) error {
+	rsp.Status = 999
+	rsp.UserInfo = &proto.UserInfo{Id: 1, LoginName: "lzt224", Nickname: "猪头"}
 	return nil
 }
