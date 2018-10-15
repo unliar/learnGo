@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-CONSUL=192.168.31.156:8500
+CONSUL=127.0.0.1:8500
 
 if [ $# == 1 ] && [ $1 == "dev" ]
     then

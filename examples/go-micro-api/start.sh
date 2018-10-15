@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-CONSUL=192.168.31.156:8500
+CONSUL=127.0.0.1:8500
 
 if [ $# == 1 ] && [ $1 == "dev" ]
     then
@@ -14,8 +14,9 @@ if [ $# == 1 ] && [ $1 == "dev" ]
         fi
 else
     echo "start production mode"
+    go build app.go
     CONSUL=$1
 fi
 
 echo "当前注册中心ip---->$CONSUL"
-CONSUL_HTTP_ADDR=$CONSUL go run app.go  --registry=consul --registry_address=$CONSUL --selector=cache --server=grpc --client=grpc
+CONSUL_HTTP_ADDR=$CONSUL ./app  --registry=consul --registry_address=$CONSUL --selector=cache --server=grpc --client=grpc
