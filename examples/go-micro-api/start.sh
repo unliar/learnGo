@@ -14,9 +14,10 @@ if [ $# == 1 ] && [ $1 == "dev" ]
         fi
 else
     echo "start production mode"
-    go build app.go
     CONSUL=$1
 fi
+
+go build app.go
 
 echo "当前注册中心ip---->$CONSUL"
 CONSUL_HTTP_ADDR=$CONSUL ./app  --registry=consul --registry_address=$CONSUL --selector=cache --server=grpc --client=grpc
