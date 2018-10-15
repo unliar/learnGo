@@ -67,13 +67,19 @@ func GetUserInfo(c *gin.Context) {
 
 // PostUserInfo 创建用户
 func PostUserInfo(c *gin.Context) {
+	data, _ := AccountSVService.PostUserInfo(context.TODO(), &ASV.UserInfo{
+		LoginName: "admin",
+		Nickname:  "admin",
+	})
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,
+		Result:     data,
 	})
 }
 
 // UpdateUserInfo 更新用户信息
 func UpdateUserInfo(c *gin.Context) {
+
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,
 	})

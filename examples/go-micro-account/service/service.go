@@ -50,6 +50,7 @@ func (a *Account) GetUserInfo(ctx context.Context, req *proto.UIDInput, rsp *pro
 func (a *Account) PostUserInfo(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
 	result := &UserInfo{
 		LoginName:  req.GetLoginName(),
+		Nickname:   req.GetNickname(),
 		Age:        req.GetAge(),
 		Gender:     int64(req.GetGender()),
 		Avatar:     req.GetAvatar(),
@@ -68,6 +69,7 @@ func (a *Account) PostUserInfo(ctx context.Context, req *proto.UserInfo, rsp *pr
 		DB.Create(result)
 		rsp.Status = 1
 		rsp.ErrMsg = strconv.FormatUint(uint64(result.ID), 10)
+		return nil
 	}
 	rsp.Status = 0
 	rsp.ErrMsg = "not work"
