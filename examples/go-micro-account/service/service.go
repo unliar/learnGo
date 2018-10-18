@@ -27,22 +27,9 @@ type Payload struct {
 
 // GetUserInfo 是用来获取用户信息的接口
 func (a *Account) GetUserInfo(ctx context.Context, req *proto.UIDInput, rsp *proto.UserInfo) error {
-	result := &UserInfo{}
+	result := &proto.UserInfo{}
 	DB.First(result, req.GetUID())
-	rsp.Id = int64(result.ID)
-	rsp.LoginName = result.LoginName
-	rsp.Age = result.Age
-	rsp.Gender = proto.Gender(result.Gender)
-	rsp.Avatar = result.Avatar
-	rsp.Location = result.Location
-	rsp.Profession = result.Profession
-	rsp.Status = int32(result.Status)
-	rsp.Phone = result.Phone
-	rsp.Email = result.Email
-	rsp.WeChatId = result.WeChatId
-	rsp.QQId = result.QQId
-	rsp.Brief = result.Brief
-	rsp.NationCode = result.NationCode
+	*rsp = *result
 	return nil
 }
 
@@ -162,6 +149,16 @@ func (a *Account) CheckToken(ctx context.Context, req *proto.TokenInput, rsp *pr
 
 // CheckNickname 是用来检测用户昵称
 func (a *Account) CheckNickname(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
+	result := &UserInfo{}
+	DB.First(result, "nickname=?", req.GetNickname())
+	fmt.Println("CheckNickname", result)
+	if result.ID > 0 {
+		rsp.Status = 2
+		rsp.ErrMsg = "the Nickname is used"
+		return nil
+	}
+	rsp.Status = 1
+	rsp.ErrMsg = "not used"
 	return nil
 }
 
@@ -172,17 +169,52 @@ func (a *Account) UpdatePassword(ctx context.Context, req *proto.UpdatePassInput
 
 // CheckLoginName 是检查登录名称的接口
 func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
+	result := &UserInfo{}
+	DB.First(result, "login_name=?", req.GetLoginName())
+	fmt.Println("CheckLoginName", result)
+	if result.ID > 0 {
+		rsp.Status = 2
+		rsp.ErrMsg = "the login_name is used"
+		return nil
+	}
+	rsp.Status = 1
+	rsp.ErrMsg = "login_name not used"
 	return nil
+
 }
 
 // CheckPhone 是检查手机号的接口
 func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
+	result := &UserInfo{}
+	DB.First(result, "phone=?", req.GetPhone())
+	fmt.Println("CheckPhone", result)
+	if result.ID > 0 {
+		rsp.Status = 2
+		rsp.ErrMsg = "the phone is used"
+		return nil
+	}
+	rsp.Status = 1
+	rsp.ErrMsg = "phone not used"
 	return nil
 }
 
 // GetUserInfoByToken 是用token获取用户信息的接口
 func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput, rsp *proto.UserInfoByTokenResponse) error {
-	rsp.Status = 999
-	rsp.UserInfo = &proto.UserInfo{Id: 1, LoginName: "lzt224", Nickname: "猪头"}
+	// 检测token
+	token, _ := jwt.ParseWithClaims(req.GetToken(), &Payload{}, func(token *jwt.Token) (interface{}, error) {
+		return SignKey, nil
+	})
+	// token 合法--->获取用户信息
+	if claims, ok := token.Claims.(*Payload); ok && token.Valid {
+		fmt.Println(claims.UID, claims.Status, claims)
+		rsp.Status = 1
+		result := &proto.UserInfo{}
+		DB.First(result, claims.UID)
+		rsp.UserInfo = result
+		return nil
+	}
+	// 用id获取信息
+	rsp.Status = 2
+	rsp.UserInfo = nil
 	return nil
 }
