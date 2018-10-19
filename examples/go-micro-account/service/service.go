@@ -35,27 +35,12 @@ func (a *Account) GetUserInfo(ctx context.Context, req *proto.UIDInput, rsp *pro
 
 // PostUserInfo 是用来创建用户信息的方法
 func (a *Account) PostUserInfo(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &UserInfo{
-		LoginName:  req.GetLoginName(),
-		Nickname:   req.GetNickname(),
-		Age:        req.GetAge(),
-		Gender:     int64(req.GetGender()),
-		Avatar:     req.GetAvatar(),
-		Location:   req.GetLocation(),
-		Profession: req.GetProfession(),
-		Status:     int64(req.GetStatus()),
-		Phone:      req.GetPhone(),
-		Email:      req.GetEmail(),
-		WeChatId:   req.GetWeChatId(),
-		QQId:       req.GetQQId(),
-		Brief:      req.GetBrief(),
-		NationCode: req.GetNationCode(),
-	}
+	result := &proto.UserInfo{}
 	IsOk := DB.NewRecord(result)
 	if IsOk {
 		DB.Create(result)
 		rsp.Status = 1
-		rsp.ErrMsg = strconv.FormatUint(uint64(result.ID), 10)
+		rsp.ErrMsg = strconv.FormatInt(result.Id,10)
 		return nil
 	}
 	rsp.Status = 0
