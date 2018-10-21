@@ -45,13 +45,17 @@ func main() {
 	})
 	// 健康检查api
 	r.GET("/api/health", ac.GetHealthStatus)
+
+	// 检查用户登录名手机号昵称是否重复的接口
+	r.GET("/api/unique", ac.GetValueIsUnique)
 	// 获取用户信息
 	r.GET("/api/users/:uid", ac.GetUserInfo)
+
 	// 注册用户
 	r.POST("/api/users", ac.PostUserInfo)
+
 	// 修改用户基础信息
 	r.PUT("/api/users", ac.UpdateUserInfo)
-	// 修改用户联系信息
 
 	// 创建||刷新登录token
 	r.POST("/api/tokens", ac.PostToken)

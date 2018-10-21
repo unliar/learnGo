@@ -123,3 +123,50 @@ func PostToken(c *gin.Context) {
 	})
 
 }
+
+// GetIsUnique 是检查用户登录名手机号昵称是否重复的接口
+
+func GetValueIsUnique(c *gin.Context) {
+
+	uq := UniqueQuery{}
+
+	if err := c.ShouldBindQuery(&uq); err != nil {
+		c.JSON(400, &APIRSP{
+			StatusCode: 422,
+			Detail:     "queryString model error",
+			Result:     err,
+		})
+		return
+	}
+
+	t, v := uq.Type, uq.Value
+
+	switch t {
+	case "phone":
+		rsp, err := AccountSVService.CheckPhone(context.TODO(), &ASV.UserInfo{
+			Phone: v,
+		})
+		if err != nil {
+			c.JSON(500, &APIRSP{StatusCode: 500, Detail: "server err", Result: err})
+			return
+		}
+		c.JSON(200, &APIRSP{StatusCode: 200, Detail: t, Result: rsp})
+	case "nickname":
+		rsp, err := AccountSVService.CheckNickname(context.TODO(), &ASV.UserInfo{Nickname: v})
+		if err != nil {
+			c.JSON(500, &APIRSP{StatusCode: 500, Detail: "server err", Result: err})
+			return
+		}
+		c.JSON(200, &APIRSP{StatusCode: 200, Detail: t, Result: rsp})
+	case "loginName":
+		rsp, err := AccountSVService.CheckLoginName(context.TODO(), &ASV.UserInfo{LoginName: v})
+		if err != nil {
+			c.JSON(500, &APIRSP{StatusCode: 500, Detail: "server err", Result: err})
+			return
+		}
+		c.JSON(200, &APIRSP{StatusCode: 200, Detail: t, Result: rsp})
+	default:
+		c.JSON(200, &APIRSP{StatusCode: 400, Detail: "no matched type,value must be oneof phone nickname loginName"})
+	}
+
+}
