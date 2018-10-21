@@ -147,26 +147,52 @@ func GetValueIsUnique(c *gin.Context) {
 			Phone: v,
 		})
 		if err != nil {
-			c.JSON(500, &APIRSP{StatusCode: 500, Detail: "server err", Result: err})
+			c.JSON(500, &APIRSP{
+				StatusCode: 500,
+				Detail:     "server err",
+				Result:     err})
 			return
 		}
-		c.JSON(200, &APIRSP{StatusCode: 200, Detail: t, Result: rsp})
+		c.JSON(200, &APIRSP{
+			StatusCode: 200,
+			Detail:     t,
+			Result:     rsp})
 	case "nickname":
 		rsp, err := AccountSVService.CheckNickname(context.TODO(), &ASV.UserInfo{Nickname: v})
 		if err != nil {
-			c.JSON(500, &APIRSP{StatusCode: 500, Detail: "server err", Result: err})
+			c.JSON(500, &APIRSP{
+				StatusCode: 500,
+				Detail:     "server err",
+				Result:     err,
+			})
 			return
 		}
-		c.JSON(200, &APIRSP{StatusCode: 200, Detail: t, Result: rsp})
+		c.JSON(200, &APIRSP{
+			StatusCode: 200,
+			Detail:     t,
+			Result:     rsp,
+		})
 	case "loginName":
 		rsp, err := AccountSVService.CheckLoginName(context.TODO(), &ASV.UserInfo{LoginName: v})
 		if err != nil {
-			c.JSON(500, &APIRSP{StatusCode: 500, Detail: "server err", Result: err})
+			c.JSON(500, &APIRSP{
+				StatusCode: 500,
+				Detail:     "server err",
+				Result:     err,
+			})
 			return
 		}
-		c.JSON(200, &APIRSP{StatusCode: 200, Detail: t, Result: rsp})
+		c.JSON(200, &APIRSP{
+			StatusCode: 200,
+			Detail:     t,
+			Result:     rsp,
+		})
 	default:
-		c.JSON(200, &APIRSP{StatusCode: 400, Detail: "no matched type,value must be oneof phone nickname loginName"})
+		c.JSON(200, &APIRSP{
+			StatusCode: 400,
+			Detail:     "no matched type,value must be oneof phone nickname loginName",
+			Result:     nil,
+		})
 	}
 
 }
