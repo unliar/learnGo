@@ -50,15 +50,15 @@ func (a *Account) PostUserInfo(ctx context.Context, req *proto.UserInfo, rsp *pr
 
 // UpdateUserInfo 是用来更新用户信息
 func (a *Account) UpdateUserInfo(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &UserInfo{}
+	result := &proto.UserInfo{}
 	DB.First(result, req.GetId())
 	// 更新年龄
 	if req.GetAge() != 0 && result.Age != req.GetAge() {
 		result.Age = req.GetAge()
 	}
 	// 性别
-	if req.GetGender() != 0 && result.Gender != int64(req.GetGender()) {
-		result.Gender = int64(req.GetGender())
+	if req.GetGender() != 0 && result.Gender != req.GetGender() {
+		result.Gender = req.GetGender()
 	}
 	// 头像
 	if req.GetAvatar() != "" && result.Avatar != req.GetAvatar() {
