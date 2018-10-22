@@ -99,8 +99,8 @@ func PostToken(c *gin.Context) {
 	t := c.Query("type")
 	if t == "refresh" {
 		// 获取cookies里的token
-		Token, err := c.Request.Cookie("USER_TOKEN")
-		fmt.Println("isok", Token.Value)
+		Token, err := c.Cookie("USER_TOKEN")
+		fmt.Println("isok", Token)
 		if err != nil {
 			c.JSON(403, &APIRSP{
 				StatusCode: 403,
@@ -111,7 +111,7 @@ func PostToken(c *gin.Context) {
 
 		// 获取根据token获取用户信息并且生成新的token
 		rsp, err := AccountSVService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
-			Token: Token.Value,
+			Token: Token,
 		})
 
 		if err != nil || rsp.Status != 1 {
@@ -143,8 +143,7 @@ func PostToken(c *gin.Context) {
 
 }
 
-// GetIsUnique 是检查用户登录名手机号昵称是否重复的接口
-
+// GetValueIsUnique 是检查用户登录名手机号昵称是否重复的接口
 func GetValueIsUnique(c *gin.Context) {
 
 	uq := UniqueQuery{}
