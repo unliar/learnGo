@@ -95,32 +95,51 @@ func GetHealthStatus(c *gin.Context) {
 
 // PostToken 是用来获取登录token凭证的
 func PostToken(c *gin.Context) {
-	//如果当前token合法 就获取一个新的token
-	//如果当前token不合法就获取账户密码
-	Token, err := c.Request.Cookie("USER_TOKEN")
-	fmt.Println("isok", Token)
-	if err != nil {
-		c.JSON(403, &APIRSP{
-			StatusCode: 403,
-			Detail:     "NO TOKEN",
+	//判断是刷新还是获取新的token
+	t := c.Query("type")
+	if t == "refresh" {
+		// 获取cookies里的token
+		Token, err := c.Request.Cookie("USER_TOKEN")
+		fmt.Println("isok", Token.Value)
+		if err != nil {
+			c.JSON(403, &APIRSP{
+				StatusCode: 403,
+				Detail:     "NO TOKEN",
+			})
+			return
+		}
+
+		// 获取根据token获取用户信息并且生成新的token
+		rsp, err := AccountSVService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+			Token: Token.Value,
 		})
+
+		if err != nil || rsp.Status != 1 {
+			c.JSON(400, &APIRSP{
+				StatusCode: 403,
+				Detail:     "call CheckToken error ",
+				Result:     err,
+			})
+			return
+		}
+		// 生成新的token
+		tokenMessage, err := AccountSVService.GetToken(context.TODO(), rsp.UserInfo)
+		if err != nil {
+			c.JSON(400, &APIRSP{
+				StatusCode: 400,
+				Detail:     "GetToken service error",
+				Result:     err,
+			})
+			return
+		}
+		c.JSON(200, &APIRSP{
+			StatusCode: 200,
+			Detail:     "OK",
+			Result:     tokenMessage,
+		})
+
 		return
 	}
-	rsp, err := AccountSVService.CheckToken(context.TODO(), &ASV.TokenInput{
-		Token: Token.String(),
-	})
-	if err != nil || rsp.Status != 1 {
-		c.JSON(400, &APIRSP{
-			StatusCode: 403,
-			Detail:     "call CheckToken error ",
-		})
-		return
-	}
-	c.JSON(200, &APIRSP{
-		StatusCode: 200,
-		Detail:     "OK",
-		Result:     rsp,
-	})
 
 }
 
