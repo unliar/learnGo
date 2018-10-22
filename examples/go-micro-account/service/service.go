@@ -206,5 +206,26 @@ func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput,
 
 // CheckPassword 是用于检测账户登录的接口
 func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.ResponseStatus) error {
+	var t string
+	var id int64
+	switch req.GetType() {
+	case "phone":
+		t = "user_infos.phone = ? AND user_passes.password = ?"
+	case "email":
+		t = "user_infos.email = ? AND user_passes.password = ?"
+	case "loginName":
+		t = "user_infos.login_name = ? AND user_passes.password = ?"
+	}
+
+	DB.Table("user_infos").Joins("left join user_passes "+
+		"on user_passes.uid = user_infos.id").Where(t, req.GetValue(), req.GetPassword()).Count(&id)
+	fmt.Println(t, "CheckPassword db result===>", id)
+	if id > 0 {
+		rsp.Status = 1
+		rsp.ErrMsg = "ok"
+		return nil
+	}
+	rsp.Status = 2
+	rsp.ErrMsg = "failed"
 	return nil
 }
