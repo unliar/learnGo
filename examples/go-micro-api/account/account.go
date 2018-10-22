@@ -95,6 +95,8 @@ func GetHealthStatus(c *gin.Context) {
 
 // PostToken 是用来获取登录token凭证的
 func PostToken(c *gin.Context) {
+	var loginRequest LoinRequest
+
 	//判断是刷新还是获取新的token
 	t := c.Query("type")
 	if t == "refresh" {
@@ -140,14 +142,54 @@ func PostToken(c *gin.Context) {
 
 		return
 	}
+	// 此时是登录
+
+	if err := c.ShouldBind(&loginRequest); err != nil {
+		c.JSON(400, &APIRSP{
+			StatusCode: 422,
+			Detail:     "model error",
+			Result:     err,
+		})
+		return
+	}
+	// 登录类型
+	switch loginRequest.Type {
+	case "email":
+		c.JSON(200, &APIRSP{
+			StatusCode: 200,
+			Detail:     "type==>" + loginRequest.Type,
+			Result:     nil,
+		})
+
+	case "phone":
+
+		c.JSON(200, &APIRSP{
+			StatusCode: 200,
+			Detail:     "type==>" + loginRequest.Type,
+			Result:     nil,
+		})
+
+	case "loginName":
+		c.JSON(200, &APIRSP{
+			StatusCode: 200,
+			Detail:     "type==>" + loginRequest.Type,
+			Result:     nil,
+		})
+
+	default:
+		c.JSON(400, &APIRSP{
+			StatusCode: 400,
+			Detail:     "no match type",
+			Result:     nil,
+		})
+	}
 
 }
 
 // GetValueIsUnique 是检查用户登录名手机号昵称是否重复的接口
 func GetValueIsUnique(c *gin.Context) {
 
-	uq := UniqueQuery{}
-
+	var uq UniqueQuery
 	if err := c.ShouldBindQuery(&uq); err != nil {
 		c.JSON(400, &APIRSP{
 			StatusCode: 422,
@@ -168,7 +210,8 @@ func GetValueIsUnique(c *gin.Context) {
 			c.JSON(500, &APIRSP{
 				StatusCode: 500,
 				Detail:     "server err",
-				Result:     err})
+				Result:     err,
+			})
 			return
 		}
 		c.JSON(200, &APIRSP{

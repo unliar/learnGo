@@ -40,7 +40,7 @@ func (a *Account) PostUserInfo(ctx context.Context, req *proto.UserInfo, rsp *pr
 	if IsOk {
 		DB.Create(result)
 		rsp.Status = 1
-		rsp.ErrMsg = strconv.FormatInt(result.Id,10)
+		rsp.ErrMsg = strconv.FormatInt(result.Id, 10)
 		return nil
 	}
 	rsp.Status = 0
@@ -201,5 +201,10 @@ func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput,
 	// 用id获取信息
 	rsp.Status = 2
 	rsp.UserInfo = nil
+	return nil
+}
+
+// CheckPassword 是用于检测账户登录的接口
+func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.ResponseStatus) error {
 	return nil
 }
