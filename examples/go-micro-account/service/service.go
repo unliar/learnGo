@@ -134,10 +134,10 @@ func (a *Account) CheckToken(ctx context.Context, req *proto.TokenInput, rsp *pr
 
 // CheckNickname 是用来检测用户昵称
 func (a *Account) CheckNickname(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &UserInfo{}
+	result := &proto.UserInfo{}
 	DB.First(result, "nickname=?", req.GetNickname())
 	fmt.Println("CheckNickname", result)
-	if result.ID > 0 {
+	if result.Id > 0 {
 		rsp.Status = 2
 		rsp.ErrMsg = "the Nickname is used"
 		return nil
@@ -154,10 +154,10 @@ func (a *Account) UpdatePassword(ctx context.Context, req *proto.UpdatePassInput
 
 // CheckLoginName 是检查登录名称的接口
 func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &UserInfo{}
+	result := &proto.UserInfo{}
 	DB.First(result, "login_name=?", req.GetLoginName())
 	fmt.Println("CheckLoginName", result)
-	if result.ID > 0 {
+	if result.Id > 0 {
 		rsp.Status = 2
 		rsp.ErrMsg = "the login_name is used"
 		return nil
@@ -170,10 +170,10 @@ func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *
 
 // CheckPhone 是检查手机号的接口
 func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &UserInfo{}
+	result := &proto.UserInfo{}
 	DB.First(result, "phone=?", req.GetPhone())
 	fmt.Println("CheckPhone", result)
-	if result.ID > 0 {
+	if result.Id > 0 {
 		rsp.Status = 2
 		rsp.ErrMsg = "the phone is used"
 		return nil
@@ -205,9 +205,9 @@ func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput,
 }
 
 // CheckPassword 是用于检测账户登录的接口
-func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.ResponseStatus) error {
+func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.UserInfoByTokenResponse) error {
 	var t string
-	var id int64
+	userInfo := &proto.UserInfo{}
 	switch req.GetType() {
 	case "phone":
 		t = "user_infos.phone = ? AND user_passes.password = ?"
@@ -218,14 +218,14 @@ func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInp
 	}
 
 	DB.Table("user_infos").Joins("left join user_passes "+
-		"on user_passes.uid = user_infos.id").Where(t, req.GetValue(), req.GetPassword()).Count(&id)
-	fmt.Println(t, "CheckPassword db result===>", id)
-	if id > 0 {
+		"on user_passes.uid = user_infos.id").Where(t, req.GetValue(), req.GetPassword()).First(userInfo)
+	fmt.Println(t, "CheckPassword db result===>", userInfo)
+	if userInfo.Id > 0 {
 		rsp.Status = 1
-		rsp.ErrMsg = "ok"
+		rsp.UserInfo = userInfo
 		return nil
 	}
 	rsp.Status = 2
-	rsp.ErrMsg = "failed"
+	rsp.UserInfo = nil
 	return nil
 }
