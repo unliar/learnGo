@@ -3,11 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/satori/go.uuid"
 	"strconv"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
-
+	"github.com/dgrijalva/jwt-go"
 	proto "github.com/unliar/proto/account"
 )
 
@@ -51,44 +51,16 @@ func (a *Account) PostUserInfo(ctx context.Context, req *proto.UserInfo, rsp *pr
 // UpdateUserInfo 是用来更新用户信息
 func (a *Account) UpdateUserInfo(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
 	result := &proto.UserInfo{}
-	DB.First(result, req.GetId())
-	// 更新年龄
-	if req.GetAge() != 0 && result.Age != req.GetAge() {
-		result.Age = req.GetAge()
+
+	count := DB.Model(result).Where("id = ?", req.GetId()).Updates(req).RowsAffected
+	fmt.Println("UpdateUserInfo====>count", count)
+	if count == 1 {
+		rsp.Status = proto.Status_Ok
+		rsp.ErrMsg = "ok"
+		return nil
 	}
-	// 性别
-	if req.GetGender() != 0 && result.Gender != req.GetGender() {
-		result.Gender = req.GetGender()
-	}
-	// 头像
-	if req.GetAvatar() != "" && result.Avatar != req.GetAvatar() {
-		result.Avatar = req.GetAvatar()
-	}
-	// 位置
-	if req.GetLocation() != "" && result.Location != req.GetLocation() {
-		result.Location = req.GetLocation()
-	}
-	// 手机
-	if req.GetPhone() != "" && result.Phone != req.GetPhone() {
-		result.Phone = req.GetPhone()
-	}
-	// 邮箱
-	if req.GetEmail() != "" && result.Email != req.GetEmail() {
-		result.Email = req.GetEmail()
-	}
-	// 微信
-	if req.GetWeChatId() != "" && result.WeChatId != req.GetWeChatId() {
-		result.WeChatId = req.GetWeChatId()
-	}
-	// Brief简介
-	if req.GetBrief() != "" && result.Brief != req.GetBrief() {
-		result.Brief = req.GetBrief()
-	}
-	// 地区码
-	if req.GetNationCode() != "" && result.NationCode != req.GetNationCode() {
-		result.NationCode = req.GetNationCode()
-	}
-	DB.Save(result)
+	rsp.Status = proto.Status_Failed
+	rsp.ErrMsg = "check if you have the correct id or has updated"
 	return nil
 }
 
@@ -227,5 +199,53 @@ func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInp
 	}
 	rsp.Status = 2
 	rsp.UserInfo = nil
+	return nil
+}
+
+// RegisterUserByPassword 是用于密码注册的方法
+func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.UserInfo) error {
+	// 设置用户信息表
+	User := &proto.UserInfo{}
+	// 生成随机昵称和登录名
+	UUID := uuid.Must(uuid.NewV4())
+	User.Nickname = fmt.Sprintf("%s", UUID)
+	User.LoginName = fmt.Sprintf("%s", UUID)
+	// 设置密码表
+	Pass := &UserPass{}
+	Pass.Password = req.GetPassword()
+	// 判断手机号 邮箱 登录名是否使用过
+	switch req.GetType() {
+	case "phone":
+		User.Phone = req.GetValue()
+		if r := DB.First(User, "phone = ?", req.GetValue()).RowsAffected; r > 0 {
+			return nil
+		}
+
+	case "email":
+		User.Email = req.GetValue()
+		if r := DB.First(User, "email = ?", req.GetValue()).RowsAffected; r > 0 {
+			return nil
+		}
+
+	case "LoginName":
+		User.LoginName = req.GetValue()
+		if r := DB.First(User, "login_name = ?", req.GetValue()).RowsAffected; r > 0 {
+			return nil
+		}
+	}
+	// 启动事务操作
+	tx := DB.Begin()
+	if err := tx.Create(User).Error; err != nil {
+		tx.Rollback()
+		return nil
+	}
+	Pass.UID = User.Id
+	if err := tx.Create(Pass).Error; err != nil {
+		tx.Rollback()
+		return nil
+	}
+	fmt.Print("user====>", User)
+	tx.Commit()
+	*rsp = *User
 	return nil
 }
