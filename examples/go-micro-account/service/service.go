@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/micro/go-micro/errors"
 	"github.com/satori/go.uuid"
 	"strconv"
 	"time"
@@ -106,35 +107,40 @@ func (a *Account) CheckToken(ctx context.Context, req *proto.TokenInput, rsp *pr
 
 // CheckNickname 是用来检测用户昵称
 func (a *Account) CheckNickname(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &proto.UserInfo{}
-	DB.First(result, "nickname=?", req.GetNickname())
-	fmt.Println("CheckNickname", result)
-	if result.Id > 0 {
-		rsp.Status = 2
-		rsp.ErrMsg = "the Nickname is used"
+	result := &proto.UserInfo{Nickname: req.GetNickname()}
+	if r := DB.Where(result).First(result).RowsAffected; r > 0 {
+		rsp.Status = proto.Status_Failed
+		rsp.ErrMsg = "nickname is used"
 		return nil
 	}
-	rsp.Status = 1
-	rsp.ErrMsg = "not used"
+
+	rsp.Status = proto.Status_Ok
+	rsp.ErrMsg = "nickname is not used"
 	return nil
 }
 
 // UpdatePassword 是更新用户密码的接口
 func (a *Account) UpdatePassword(ctx context.Context, req *proto.UpdatePassInput, rsp *proto.ResponseStatus) error {
+	result := &UserPass{Password: req.GetPassword()}
+	if r := DB.Model(result).Where("uid = ?", req.GetUID()).Updates(result).RowsAffected; r > 0 {
+		rsp.Status = proto.Status_Ok
+		rsp.ErrMsg = "ok"
+		return nil
+	}
+	rsp.Status = proto.Status_Failed
+	rsp.ErrMsg = "fail update"
 	return nil
 }
 
 // CheckLoginName 是检查登录名称的接口
 func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &proto.UserInfo{}
-	DB.First(result, "login_name=?", req.GetLoginName())
-	fmt.Println("CheckLoginName", result)
-	if result.Id > 0 {
-		rsp.Status = 2
+	result := &proto.UserInfo{LoginName: req.GetLoginName()}
+	if r := DB.First(result).First(result).RowsAffected; r > 0 {
+		rsp.Status = proto.Status_Failed
 		rsp.ErrMsg = "the login_name is used"
 		return nil
 	}
-	rsp.Status = 1
+	rsp.Status = proto.Status_Ok
 	rsp.ErrMsg = "login_name not used"
 	return nil
 
@@ -142,10 +148,8 @@ func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *
 
 // CheckPhone 是检查手机号的接口
 func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &proto.UserInfo{}
-	DB.First(result, "phone=?", req.GetPhone())
-	fmt.Println("CheckPhone", result)
-	if result.Id > 0 {
+	result := &proto.UserInfo{Phone: req.GetPhone()}
+	if r := DB.First(result).First(result).RowsAffected; r > 0 {
 		rsp.Status = 2
 		rsp.ErrMsg = "the phone is used"
 		return nil
@@ -188,11 +192,9 @@ func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInp
 	case "loginName":
 		t = "user_infos.login_name = ? AND user_passes.password = ?"
 	}
-
-	DB.Table("user_infos").Joins("left join user_passes "+
-		"on user_passes.uid = user_infos.id").Where(t, req.GetValue(), req.GetPassword()).First(userInfo)
-	fmt.Println(t, "CheckPassword db result===>", userInfo)
-	if userInfo.Id > 0 {
+	q := "left join user_passes on user_passes.uid = user_infos.id"
+	if r := DB.Table("user_infos").Joins(q).Where(t, req.GetValue(), req.GetPassword()).First(userInfo).RowsAffected; r > 0 {
+		fmt.Println(t, "CheckPassword db result===>", userInfo)
 		rsp.Status = 1
 		rsp.UserInfo = userInfo
 		return nil
@@ -218,19 +220,19 @@ func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.CheckPa
 	case "phone":
 		User.Phone = req.GetValue()
 		if r := DB.First(User, "phone = ?", req.GetValue()).RowsAffected; r > 0 {
-			return nil
+			return errors.BadRequest("4001", "%s", "手机已存在")
 		}
 
 	case "email":
 		User.Email = req.GetValue()
 		if r := DB.First(User, "email = ?", req.GetValue()).RowsAffected; r > 0 {
-			return nil
+			return errors.BadRequest("4002", "%s", "邮箱已存在")
 		}
 
 	case "LoginName":
 		User.LoginName = req.GetValue()
 		if r := DB.First(User, "login_name = ?", req.GetValue()).RowsAffected; r > 0 {
-			return nil
+			return errors.BadRequest("4003", "%s", "登录名已存在")
 		}
 	}
 	// 启动事务操作
