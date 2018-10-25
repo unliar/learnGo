@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/micro/go-micro/errors"
 	"github.com/satori/go.uuid"
+	"learnGo/examples/go-micro-account/utils"
 	"strconv"
 	"time"
 
@@ -14,6 +15,7 @@ import (
 
 // SignKey 用于token签名
 var SignKey = []byte("hikey")
+var MD5Key = "hi-md5"
 
 // Account 账户模块
 type Account struct {
@@ -183,7 +185,8 @@ func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput,
 // CheckPassword 是用于检测账户登录的接口
 func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.UserInfoByTokenResponse) error {
 	var t string
-	userInfo := &proto.UserInfo{}
+	UserInfo := &proto.UserInfo{}
+	PasswordMD5 := utils.CreateMD5(req.Password, MD5Key)
 	switch req.GetType() {
 	case "phone":
 		t = "user_infos.phone = ? AND user_passes.password = ?"
@@ -191,12 +194,14 @@ func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInp
 		t = "user_infos.email = ? AND user_passes.password = ?"
 	case "loginName":
 		t = "user_infos.login_name = ? AND user_passes.password = ?"
+	default:
+		return errors.BadRequest("400", "not matched type===>%s", req.GetType())
 	}
 	q := "left join user_passes on user_passes.uid = user_infos.id"
-	if r := DB.Table("user_infos").Joins(q).Where(t, req.GetValue(), req.GetPassword()).First(userInfo).RowsAffected; r > 0 {
-		fmt.Println(t, "CheckPassword db result===>", userInfo)
+	if r := DB.Model(UserInfo).Joins(q).Where(t, req.GetValue(), PasswordMD5).First(UserInfo).RowsAffected; r > 0 {
+		fmt.Println("CheckPassword db result=============>", UserInfo)
 		rsp.Status = 1
-		rsp.UserInfo = userInfo
+		rsp.UserInfo = UserInfo
 		return nil
 	}
 	rsp.Status = 2
@@ -214,7 +219,8 @@ func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.CheckPa
 	User.LoginName = fmt.Sprintf("%s", UUID)
 	// 设置密码表
 	Pass := &UserPass{}
-	Pass.Password = req.GetPassword()
+	PasswordMD5 := utils.CreateMD5(req.GetPassword(), MD5Key)
+	Pass.Password = PasswordMD5
 	// 判断手机号 邮箱 登录名是否使用过
 	switch req.GetType() {
 	case "phone":
@@ -234,6 +240,9 @@ func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.CheckPa
 		if r := DB.First(User, "login_name = ?", req.GetValue()).RowsAffected; r > 0 {
 			return errors.BadRequest("4003", "%s", "登录名已存在")
 		}
+	default:
+		return errors.BadRequest("400", "type errors ===> %s", req.GetType())
+
 	}
 	// 启动事务操作
 	tx := DB.Begin()
