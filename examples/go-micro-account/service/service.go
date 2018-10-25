@@ -31,9 +31,11 @@ type Payload struct {
 // GetUserInfo 是用来获取用户信息的接口
 func (a *Account) GetUserInfo(ctx context.Context, req *proto.UIDInput, rsp *proto.UserInfo) error {
 	result := &proto.UserInfo{}
-	DB.First(result, req.GetUID())
-	*rsp = *result
-	return nil
+	if r := DB.First(result, req.GetUID()).RowsAffected; r > 0 {
+		*rsp = *result
+		return nil
+	}
+	return errors.NotFound("400", "user not found %v", req.UID)
 }
 
 // PostUserInfo 是用来创建用户信息的方法
