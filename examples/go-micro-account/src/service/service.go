@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/micro/go-micro/errors"
 	"github.com/satori/go.uuid"
-	"learnGo/examples/go-micro-account/utils"
+	"learnGo/examples/go-micro-account/src/utils"
 	"strconv"
 	"time"
 

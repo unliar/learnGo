@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"github.com/micro/go-micro"
 	proto "github.com/unliar/proto/account"
-	SV "learnGo/examples/go-micro-account/service"
-	"learnGo/examples/go-micro-account/utils"
+	SV "learnGo/examples/go-micro-account/src/service"
+	"learnGo/examples/go-micro-account/src/utils"
 	"time"
 )
 
 func main() {
+	InitConfig()
 	service := micro.NewService(
-		micro.Name("unliar-account"),
-		micro.Version("beta-1.1.1"),
-		micro.RegisterInterval(time.Second*15),
+		micro.Name(Config.ServiceName),
+		micro.Version(Config.Env+"-"+Config.ServiceVersion),
+		micro.RegisterInterval(15*time.Second),
 		micro.RegisterTTL(time.Second*60),
 		micro.WrapCall(utils.MicroWrapCall),
 		micro.WrapHandler(utils.MicroWrapHandler),

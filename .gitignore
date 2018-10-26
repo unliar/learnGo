@@ -5,9 +5,10 @@ examples/gp-curl/temp/
 examples/gp-curl/vendor/*
 examples/gp-grpc-blog/temp/
 examples/gp-grpc-blog/vendor/*
-examples/go-micro-account/tmp/*
+examples/go-micro-account/src/tmp/*
+examples/go-micro-account/src/app
 examples/go-micro-api/tmp/*
-examples/go-micro-account/vendor/*
+examples/go-micro-account/src/vendor/*
 examples/go-micro-api/vendor/github.com/*
 examples/go-micro-api/vendor/golang.org/*
 examples/go-micro-api/vendor/gopkg.in/*
