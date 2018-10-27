@@ -71,10 +71,38 @@ func (a *AccountContoller) GetUserInfo(c *gin.Context) {
 
 // PostUserInfo 创建用户
 func (a *AccountContoller) PostUserInfo(c *gin.Context) {
-	data, _ := AccountSVService.PostUserInfo(context.TODO(), &ASV.UserInfo{
-		LoginName: "admin",
-		Nickname:  "admin",
+	var loginRequest LoinRequest
+	if err := c.ShouldBind(&loginRequest); err != nil {
+		c.JSON(422, &APIRSP{
+			StatusCode: 422,
+			Detail:     "params error",
+			Result:     err,
+		})
+		return
+	}
+	// 登录类型
+	types := []string{"phone", "email", "LoginName"}
+	if !utils.ContainItem(types, c.PostForm("type")) {
+		c.JSON(400, &APIRSP{
+			StatusCode: 422,
+			Detail:     "no match types",
+			Result:     nil,
+		})
+		return
+	}
+	data, err := AccountSVService.RegisterUserByPassword(context.TODO(), &ASV.CheckPasswordInput{
+		Type:     loginRequest.Type,
+		Value:    loginRequest.Value,
+		Password: loginRequest.Password,
 	})
+	if err != nil {
+		c.JSON(400, &APIRSP{
+			StatusCode: 400,
+			Detail:     err,
+			Result:     nil,
+		})
+		return
+	}
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,
 		Result:     data,
@@ -99,11 +127,10 @@ func (a *AccountContoller) GetHealthStatus(c *gin.Context) {
 
 // PostToken 是用来获取登录token凭证的
 func (a *AccountContoller) PostToken(c *gin.Context) {
-	var loginRequest LoinRequest
 
 	//判断是刷新还是获取新的token
 	t := c.Query("type")
-
+	var loginRequest LoinRequest
 	if t == "refresh" {
 		// 获取cookies里的token
 		Token, err := c.Cookie("USER_TOKEN")
@@ -177,14 +204,14 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 		return
 	}
 	resp, err := AccountSVService.CheckPassword(context.TODO(), &ASV.CheckPasswordInput{
-		Type:     c.PostForm("type"),
-		Value:    c.PostForm("value"),
-		Password: c.PostForm("key"),
+		Type:     loginRequest.Type,
+		Value:    loginRequest.Value,
+		Password: loginRequest.Password,
 	})
 	if err != nil {
 		c.JSON(500, &APIRSP{
 			StatusCode: 500,
-			Detail:     "server node error",
+			Detail:     err,
 			Result:     nil,
 		})
 		return
@@ -193,7 +220,7 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, &APIRSP{
 			StatusCode: 500,
-			Detail:     "get token error",
+			Detail:     err,
 			Result:     nil,
 		})
 		return
