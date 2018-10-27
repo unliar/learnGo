@@ -1,13 +1,13 @@
-package account
+package controller
 
 import (
 	"context"
 	"fmt"
-	"strconv"
-
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/client"
 	ASV "github.com/unliar/proto/account"
+	"learnGo/examples/go-micro-api/utils"
+	"strconv"
 )
 
 var (
@@ -22,12 +22,16 @@ type APIRSP struct {
 	Result     interface{} `json:"result"`
 }
 
+type AccountContoller struct {
+}
+
 func init() {
 	AccountSVService = ASV.NewAccountSVService("unliar-account", client.DefaultClient)
+
 }
 
 // GetUserInfo 根据用户id获取账户信息
-func GetUserInfo(c *gin.Context) {
+func (a *AccountContoller) GetUserInfo(c *gin.Context) {
 	var err error
 	uid := c.Param("uid")
 	UID, err := strconv.ParseInt(uid, 10, 64)
@@ -66,7 +70,7 @@ func GetUserInfo(c *gin.Context) {
 }
 
 // PostUserInfo 创建用户
-func PostUserInfo(c *gin.Context) {
+func (a *AccountContoller) PostUserInfo(c *gin.Context) {
 	data, _ := AccountSVService.PostUserInfo(context.TODO(), &ASV.UserInfo{
 		LoginName: "admin",
 		Nickname:  "admin",
@@ -78,7 +82,7 @@ func PostUserInfo(c *gin.Context) {
 }
 
 // UpdateUserInfo 更新用户信息
-func UpdateUserInfo(c *gin.Context) {
+func (a *AccountContoller) UpdateUserInfo(c *gin.Context) {
 
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,
@@ -86,7 +90,7 @@ func UpdateUserInfo(c *gin.Context) {
 }
 
 // GetHealthStatus 用于获取服务状态
-func GetHealthStatus(c *gin.Context) {
+func (a *AccountContoller) GetHealthStatus(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"status":  200,
 		"message": "api server ok",
@@ -94,11 +98,12 @@ func GetHealthStatus(c *gin.Context) {
 }
 
 // PostToken 是用来获取登录token凭证的
-func PostToken(c *gin.Context) {
+func (a *AccountContoller) PostToken(c *gin.Context) {
 	var loginRequest LoinRequest
 
 	//判断是刷新还是获取新的token
 	t := c.Query("type")
+
 	if t == "refresh" {
 		// 获取cookies里的token
 		Token, err := c.Cookie("USER_TOKEN")
@@ -116,11 +121,19 @@ func PostToken(c *gin.Context) {
 			Token: Token,
 		})
 
-		if err != nil || rsp.Status != 1 {
+		if err != nil {
 			c.JSON(400, &APIRSP{
 				StatusCode: 403,
 				Detail:     "call CheckToken error ",
 				Result:     err,
+			})
+			return
+		}
+		if rsp.Status != 1 {
+			c.JSON(403, &APIRSP{
+				StatusCode: 403,
+				Detail:     "user staus forbidden",
+				Result:     nil,
 			})
 			return
 		}
@@ -134,6 +147,7 @@ func PostToken(c *gin.Context) {
 			})
 			return
 		}
+		c.SetCookie("USER_TOKEN", tokenMessage.Token, 7200, "/", "", false, false)
 		c.JSON(200, &APIRSP{
 			StatusCode: 200,
 			Detail:     "OK",
@@ -153,41 +167,48 @@ func PostToken(c *gin.Context) {
 		return
 	}
 	// 登录类型
-	switch loginRequest.Type {
-	case "email":
-		c.JSON(200, &APIRSP{
-			StatusCode: 200,
-			Detail:     "type==>" + loginRequest.Type,
-			Result:     nil,
-		})
-
-	case "phone":
-
-		c.JSON(200, &APIRSP{
-			StatusCode: 200,
-			Detail:     "type==>" + loginRequest.Type,
-			Result:     nil,
-		})
-
-	case "loginName":
-		c.JSON(200, &APIRSP{
-			StatusCode: 200,
-			Detail:     "type==>" + loginRequest.Type,
-			Result:     nil,
-		})
-
-	default:
+	types := []string{"phone", "email", "LoginName"}
+	if !utils.ContainItem(types, c.PostForm("type")) {
 		c.JSON(400, &APIRSP{
-			StatusCode: 400,
-			Detail:     "no match type",
+			StatusCode: 422,
+			Detail:     "no match types",
 			Result:     nil,
 		})
+		return
 	}
+	resp, err := AccountSVService.CheckPassword(context.TODO(), &ASV.CheckPasswordInput{
+		Type:     c.PostForm("type"),
+		Value:    c.PostForm("value"),
+		Password: c.PostForm("key"),
+	})
+	if err != nil {
+		c.JSON(500, &APIRSP{
+			StatusCode: 500,
+			Detail:     "server node error",
+			Result:     nil,
+		})
+		return
+	}
+	tokenMsg, err := AccountSVService.GetToken(context.TODO(), resp.UserInfo)
+	if err != nil {
+		c.JSON(500, &APIRSP{
+			StatusCode: 500,
+			Detail:     "get token error",
+			Result:     nil,
+		})
+		return
+	}
+	c.SetCookie("USER_TOKEN", tokenMsg.Token, 7200, "/", "", false, false)
+	c.JSON(400, &APIRSP{
+		StatusCode: 400,
+		Detail:     "hi-PostToken",
+		Result:     resp,
+	})
 
 }
 
 // GetValueIsUnique 是检查用户登录名手机号昵称是否重复的接口
-func GetValueIsUnique(c *gin.Context) {
+func (a *AccountContoller) GetValueIsUnique(c *gin.Context) {
 
 	var uq UniqueQuery
 	if err := c.ShouldBindQuery(&uq); err != nil {

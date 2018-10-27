@@ -1,12 +1,11 @@
 package main
 
 import (
-	ac "learnGo/examples/go-micro-api/account"
-	"log"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-web"
+	"learnGo/examples/go-micro-api/routes"
+	"log"
+	"time"
 )
 
 // ErrorMsg 错误信息
@@ -43,23 +42,11 @@ func main() {
 			},
 		})
 	})
-	// 健康检查api
-	r.GET("/api/health", ac.GetHealthStatus)
 
-	// 检查用户登录名手机号昵称是否重复的接口
-	r.GET("/api/unique", ac.GetValueIsUnique)
-	// 获取用户信息
-	r.GET("/api/users/:uid", ac.GetUserInfo)
-
-	// 注册用户
-	r.POST("/api/users", ac.PostUserInfo)
-
-	// 修改用户基础信息
-	r.PUT("/api/users", ac.UpdateUserInfo)
-
-	// 创建||刷新登录token
-	r.POST("/api/tokens", ac.PostToken)
-
+	// 添加账户模块
+	routes.AccountRouter(r)
+	// 添加健康检查
+	routes.AddHealth(r)
 	service.Handle("/", r)
 
 	err = service.Run()
