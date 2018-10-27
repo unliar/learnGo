@@ -111,7 +111,7 @@ func (a *AccountContoller) PostUserInfo(c *gin.Context) {
 
 // UpdateUserInfo 更新用户信息
 func (a *AccountContoller) UpdateUserInfo(c *gin.Context) {
-
+	// 暂时不做吧 可能需要做单独的接口
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,
 	})

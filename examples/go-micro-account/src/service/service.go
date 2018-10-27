@@ -214,7 +214,7 @@ func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInp
 // RegisterUserByPassword 是用于密码注册的方法
 func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.UserInfo) error {
 	// 设置用户信息表
-	User := &proto.UserInfo{}
+	User := &UserInfo{}
 	// 生成随机昵称和登录名
 	UUID := uuid.Must(uuid.NewV4())
 	User.Nickname = fmt.Sprintf("%s", UUID)
@@ -252,13 +252,16 @@ func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.CheckPa
 		tx.Rollback()
 		return nil
 	}
-	Pass.UID = User.Id
+	Pass.UID = int64(User.ID)
 	if err := tx.Create(Pass).Error; err != nil {
 		tx.Rollback()
 		return nil
 	}
 	fmt.Print("user====>", User)
 	tx.Commit()
-	*rsp = *User
+	rsp.Id = int64(User.ID)
+	rsp.LoginName = User.LoginName
+	rsp.Phone = User.Phone
+	rsp.Email = User.Email
 	return nil
 }
