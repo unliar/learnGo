@@ -3,11 +3,12 @@ package controller
 import (
 	"context"
 	"fmt"
+	"learnGo/examples/go-micro-api/utils"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-micro/client"
 	ASV "github.com/unliar/proto/account"
-	"learnGo/examples/go-micro-api/utils"
-	"strconv"
 )
 
 var (
@@ -127,7 +128,10 @@ func (a *AccountContoller) GetHealthStatus(c *gin.Context) {
 
 // PostToken 是用来获取登录token凭证的
 func (a *AccountContoller) PostToken(c *gin.Context) {
-
+	V, ok := c.Get("UID")
+	if ok {
+		fmt.Println("uid===>", V)
+	}
 	//判断是刷新还是获取新的token
 	t := c.Query("type")
 	var loginRequest LoinRequest
@@ -188,8 +192,8 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 	if err := c.ShouldBind(&loginRequest); err != nil {
 		c.JSON(400, &APIRSP{
 			StatusCode: 422,
-			Detail:     "model error",
-			Result:     err,
+			Detail:     err.Error(),
+			Result:     nil,
 		})
 		return
 	}
@@ -208,10 +212,11 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 		Value:    loginRequest.Value,
 		Password: loginRequest.Password,
 	})
-	if err != nil {
+	fmt.Println("resp====>", resp)
+	if err != nil && resp.Status == 2 {
 		c.JSON(500, &APIRSP{
 			StatusCode: 500,
-			Detail:     err,
+			Detail:     err.Error(),
 			Result:     nil,
 		})
 		return
@@ -220,7 +225,7 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, &APIRSP{
 			StatusCode: 500,
-			Detail:     err,
+			Detail:     err.Error(),
 			Result:     nil,
 		})
 		return
@@ -304,4 +309,71 @@ func (a *AccountContoller) GetValueIsUnique(c *gin.Context) {
 		})
 	}
 
+}
+
+func (a *AccountContoller) JWTAuth(t ...string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		fmt.Println("hei~ you are in jwtauth")
+
+		token, _ := c.Cookie("USER_TOKEN")
+
+		// 需要token
+		if len(t) == 0 {
+			// token为空
+			if token == "" {
+				c.AbortWithStatusJSON(403, &APIRSP{
+					StatusCode: 403,
+					Detail:     "need token but empty",
+					Result:     nil,
+				})
+				return
+			}
+			// token不为空
+			r, err := AccountSVService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+				Token: token,
+			})
+			if err != nil || r.Status != 1 || r.UserInfo.Status != 1 {
+				fmt.Println("JWTAuth failed")
+				c.AbortWithStatusJSON(403, &APIRSP{
+					StatusCode: 403,
+					Detail:     err.Error(),
+					Result:     nil,
+				})
+				return
+			}
+			fmt.Println("hi JWTAuth let you go~")
+			c.Set("UID", r.UserInfo.Id)
+			c.Next()
+			return
+
+		}
+		// 可选的token
+		if len(t) > 0 {
+			fmt.Println("当前为可选token")
+			// token不为空
+			if token != "" {
+				fmt.Println("==>有token")
+				r, err := AccountSVService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+					Token: token,
+				})
+				if err != nil || r.Status != 1 || r.UserInfo.Status != 1 {
+					fmt.Println("JWTAuth failed")
+					c.AbortWithStatusJSON(403, &APIRSP{
+						StatusCode: 403,
+						Detail:     err.Error(),
+						Result:     nil,
+					})
+					return
+				}
+				fmt.Println("hi JWTAuth let you go~")
+				c.Set("UID", r.UserInfo.Id)
+				c.Next()
+				return
+			}
+			fmt.Println("没有token")
+			c.Next()
+		}
+		// 没有token 而且 需要检查token
+
+	}
 }

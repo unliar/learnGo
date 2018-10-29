@@ -18,9 +18,9 @@ func AccountRouter(r *gin.Engine) *gin.Engine {
 	r.POST("/api/account/users", AC.PostUserInfo)
 
 	// 修改用户基础信息
-	r.PUT("/api/account/users", AC.UpdateUserInfo)
+	r.PUT("/api/account/users", AC.JWTAuth(), AC.UpdateUserInfo)
 
 	// 创建||刷新登录token 登录逻辑
-	r.POST("/api/account/tokens", AC.PostToken)
+	r.POST("/api/account/tokens", AC.JWTAuth("option"), AC.PostToken)
 	return r
 }
