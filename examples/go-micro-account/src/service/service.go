@@ -139,7 +139,7 @@ func (a *Account) UpdatePassword(ctx context.Context, req *proto.UpdatePassInput
 // CheckLoginName 是检查登录名称的接口
 func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
 	result := &proto.UserInfo{LoginName: req.GetLoginName()}
-	if r := DB.First(result).First(result).RowsAffected; r > 0 {
+	if r := DB.Where(result).First(result).RowsAffected; r > 0 {
 		rsp.Status = proto.Status_Failed
 		rsp.ErrMsg = "the login_name is used"
 		return nil
