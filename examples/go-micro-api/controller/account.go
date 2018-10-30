@@ -3,36 +3,14 @@ package controller
 import (
 	"context"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	ASV "github.com/unliar/proto/account"
 	"learnGo/examples/go-micro-api/utils"
 	"strconv"
-
-	"github.com/gin-gonic/gin"
-	"github.com/micro/go-micro/client"
-	ASV "github.com/unliar/proto/account"
 )
-
-var (
-	// AccountSVService 账户服务
-	AccountSVService ASV.AccountSVService
-)
-
-// APIRSP api错误返回值
-type APIRSP struct {
-	StatusCode int64       `json:"statusCode"`
-	Detail     interface{} `json:"detail"`
-	Result     interface{} `json:"result"`
-}
-
-type AccountContoller struct {
-}
-
-func init() {
-	AccountSVService = ASV.NewAccountSVService("unliar-account", client.DefaultClient)
-
-}
 
 // GetUserInfo 根据用户id获取账户信息
-func (a *AccountContoller) GetUserInfo(c *gin.Context) {
+func (a *AccountController) GetUserInfo(c *gin.Context) {
 	var err error
 	uid := c.Param("uid")
 	UID, err := strconv.ParseInt(uid, 10, 64)
@@ -45,7 +23,7 @@ func (a *AccountContoller) GetUserInfo(c *gin.Context) {
 		return
 	}
 
-	resp, err := AccountSVService.GetUserInfo(context.TODO(), &ASV.UIDInput{
+	resp, err := AccountService.GetUserInfo(context.TODO(), &ASV.UIDInput{
 		UID: UID,
 	})
 
@@ -71,7 +49,7 @@ func (a *AccountContoller) GetUserInfo(c *gin.Context) {
 }
 
 // PostUserInfo 创建用户
-func (a *AccountContoller) PostUserInfo(c *gin.Context) {
+func (a *AccountController) PostUserInfo(c *gin.Context) {
 	var loginRequest LoinRequest
 	if err := c.ShouldBind(&loginRequest); err != nil {
 		c.JSON(422, &APIRSP{
@@ -91,7 +69,7 @@ func (a *AccountContoller) PostUserInfo(c *gin.Context) {
 		})
 		return
 	}
-	data, err := AccountSVService.RegisterUserByPassword(context.TODO(), &ASV.CheckPasswordInput{
+	data, err := AccountService.RegisterUserByPassword(context.TODO(), &ASV.CheckPasswordInput{
 		Type:     loginRequest.Type,
 		Value:    loginRequest.Value,
 		Password: loginRequest.Password,
@@ -111,7 +89,7 @@ func (a *AccountContoller) PostUserInfo(c *gin.Context) {
 }
 
 // UpdateUserInfo 更新用户信息
-func (a *AccountContoller) UpdateUserInfo(c *gin.Context) {
+func (a *AccountController) UpdateUserInfo(c *gin.Context) {
 	// 暂时不做吧 可能需要做单独的接口
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,
@@ -119,7 +97,7 @@ func (a *AccountContoller) UpdateUserInfo(c *gin.Context) {
 }
 
 // GetHealthStatus 用于获取服务状态
-func (a *AccountContoller) GetHealthStatus(c *gin.Context) {
+func (a *AccountController) GetHealthStatus(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"status":  200,
 		"message": "api server ok",
@@ -127,7 +105,7 @@ func (a *AccountContoller) GetHealthStatus(c *gin.Context) {
 }
 
 // PostToken 是用来获取登录token凭证的
-func (a *AccountContoller) PostToken(c *gin.Context) {
+func (a *AccountController) PostToken(c *gin.Context) {
 	V, ok := c.Get("UID")
 	if ok {
 		fmt.Println("uid===>", V)
@@ -148,7 +126,7 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 		}
 
 		// 获取根据token获取用户信息并且生成新的token
-		rsp, err := AccountSVService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+		rsp, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
 			Token: Token,
 		})
 
@@ -169,7 +147,7 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 			return
 		}
 		// 生成新的token
-		tokenMessage, err := AccountSVService.GetToken(context.TODO(), rsp.UserInfo)
+		tokenMessage, err := AccountService.GetToken(context.TODO(), rsp.UserInfo)
 		if err != nil {
 			c.JSON(400, &APIRSP{
 				StatusCode: 400,
@@ -207,7 +185,7 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 		})
 		return
 	}
-	resp, err := AccountSVService.CheckPassword(context.TODO(), &ASV.CheckPasswordInput{
+	resp, err := AccountService.CheckPassword(context.TODO(), &ASV.CheckPasswordInput{
 		Type:     loginRequest.Type,
 		Value:    loginRequest.Value,
 		Password: loginRequest.Password,
@@ -221,7 +199,7 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 		})
 		return
 	}
-	tokenMsg, err := AccountSVService.GetToken(context.TODO(), resp.UserInfo)
+	tokenMsg, err := AccountService.GetToken(context.TODO(), resp.UserInfo)
 	if err != nil {
 		c.JSON(500, &APIRSP{
 			StatusCode: 500,
@@ -240,7 +218,7 @@ func (a *AccountContoller) PostToken(c *gin.Context) {
 }
 
 // GetValueIsUnique 是检查用户登录名手机号昵称是否重复的接口
-func (a *AccountContoller) GetValueIsUnique(c *gin.Context) {
+func (a *AccountController) GetValueIsUnique(c *gin.Context) {
 
 	var uq UniqueQuery
 	if err := c.ShouldBindQuery(&uq); err != nil {
@@ -256,7 +234,7 @@ func (a *AccountContoller) GetValueIsUnique(c *gin.Context) {
 
 	switch t {
 	case "phone":
-		rsp, err := AccountSVService.CheckPhone(context.TODO(), &ASV.UserInfo{
+		rsp, err := AccountService.CheckPhone(context.TODO(), &ASV.UserInfo{
 			Phone: v,
 		})
 		if err != nil {
@@ -272,7 +250,7 @@ func (a *AccountContoller) GetValueIsUnique(c *gin.Context) {
 			Detail:     t,
 			Result:     rsp})
 	case "nickname":
-		rsp, err := AccountSVService.CheckNickname(context.TODO(), &ASV.UserInfo{Nickname: v})
+		rsp, err := AccountService.CheckNickname(context.TODO(), &ASV.UserInfo{Nickname: v})
 		if err != nil {
 			c.JSON(500, &APIRSP{
 				StatusCode: 500,
@@ -287,7 +265,7 @@ func (a *AccountContoller) GetValueIsUnique(c *gin.Context) {
 			Result:     rsp,
 		})
 	case "loginName":
-		rsp, err := AccountSVService.CheckLoginName(context.TODO(), &ASV.UserInfo{LoginName: v})
+		rsp, err := AccountService.CheckLoginName(context.TODO(), &ASV.UserInfo{LoginName: v})
 		if err != nil {
 			c.JSON(500, &APIRSP{
 				StatusCode: 500,
@@ -311,7 +289,7 @@ func (a *AccountContoller) GetValueIsUnique(c *gin.Context) {
 
 }
 
-func (a *AccountContoller) JWTAuth(t ...string) gin.HandlerFunc {
+func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("hei~ you are in jwtauth")
 
@@ -329,7 +307,7 @@ func (a *AccountContoller) JWTAuth(t ...string) gin.HandlerFunc {
 				return
 			}
 			// token不为空
-			r, err := AccountSVService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+			r, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
 				Token: token,
 			})
 			if err != nil || r.Status != 1 || r.UserInfo.Status != 1 {
@@ -353,7 +331,7 @@ func (a *AccountContoller) JWTAuth(t ...string) gin.HandlerFunc {
 			// token不为空
 			if token != "" {
 				fmt.Println("==>有token")
-				r, err := AccountSVService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+				r, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
 					Token: token,
 				})
 				if err != nil || r.Status != 1 || r.UserInfo.Status != 1 {

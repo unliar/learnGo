@@ -5,16 +5,7 @@ import (
 	"github.com/micro/go-web"
 	"learnGo/examples/go-micro-api/routes"
 	"log"
-	"time"
 )
-
-// ErrorMsg 错误信息
-type ErrorMsg struct {
-	Code    int64  `json:"code"`
-	Detail  string `json:"detail"`
-	Time    int64  `json:"time"`
-	Message string `json:"message"`
-}
 
 func main() {
 	var err error
@@ -34,19 +25,17 @@ func main() {
 		context.JSON(404, gin.H{
 			"statusCode": 404,
 			"data":       nil,
-			"error": ErrorMsg{
-				Code:    999,
-				Detail:  "what'up? you may have the wrong api path!",
-				Time:    time.Now().Unix(),
-				Message: "failed",
-			},
+			"error":      "not matched router path",
 		})
 	})
 
 	// 添加账户模块
 	routes.AccountRouter(r)
+	// 添加pay模块
+	routes.PayRouter(r)
 	// 添加健康检查
 	routes.AddHealth(r)
+
 	service.Handle("/", r)
 
 	err = service.Run()

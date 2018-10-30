@@ -4,7 +4,7 @@ import "github.com/gin-gonic/gin"
 import ctl "learnGo/examples/go-micro-api/controller"
 
 // 账户模块
-var AC ctl.AccountContoller
+var AC ctl.AccountController
 
 // AccountRouter 是用于添加账户相关路由
 func AccountRouter(r *gin.Engine) *gin.Engine {
