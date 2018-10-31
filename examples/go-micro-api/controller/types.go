@@ -27,9 +27,9 @@ type LoinRequest struct {
 	Password string `form:"password" json:"password" binding:"required"` // 密码
 }
 type PayInfoRequest struct {
-	UID    int64  `form:"uid" json:"uid" binding:"required"`
-	Alipay string `form:"alipay" json:"alipay" binding:"required"`
-	TenPay string `form:"tenpay" json:"tenpay" binding:"required"`
+	UID    int64  `form:"uid" json:"uid"`
+	Alipay string `form:"alipay" json:"alipay" omitempty`
+	TenPay string `form:"tenpay" json:"tenpay" omitempty`
 }
 
 // APIRSP api错误返回值
@@ -42,13 +42,8 @@ type APIRSP struct {
 type AccountController struct {
 }
 
-var (
-	// AccountSVService 账户服务
-	AccountService account.AccountSVService
-	PayService     pay.PaySVService
-)
-
-func init() {
-	AccountService = account.NewAccountSVService("unliar-account", client.DefaultClient)
-	PayService = pay.NewPaySVService("unliar-pay", client.DefaultClient)
+type PayController struct {
 }
+
+var AccountService = account.NewAccountSVService("unliar-account", client.DefaultClient)
+var PayService = pay.NewPaySVService("unliar-pay", client.DefaultClient)

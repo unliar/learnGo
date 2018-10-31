@@ -9,6 +9,7 @@ examples/go-micro-account/src/tmp/*
 examples/go-micro-account/src/app
 examples/go-micro-api/tmp/*
 examples/go-micro-account/src/vendor/*
+examples/go-micro-pay/tmp/*
 examples/go-micro-api/vendor/github.com/*
 examples/go-micro-api/vendor/golang.org/*
 examples/go-micro-api/vendor/gopkg.in/*

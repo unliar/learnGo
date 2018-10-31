@@ -7,8 +7,9 @@ import (
 
 func PayRouter(r *gin.Engine) *gin.Engine {
 	pc := &controller.PayController{}
+	ac := controller.AccountController{}
 	r.GET("/api/pay/:uid", pc.GetPayInfo)
-	r.POST("/api/pay", AC.JWTAuth(), pc.PostPayInfo)
-	r.PUT("/api/pay", AC.JWTAuth(), pc.UpdatePayInfo)
+	r.POST("/api/pay", ac.JWTAuth(), pc.PostPayInfo)
+	r.PUT("/api/pay", ac.JWTAuth(), pc.UpdatePayInfo)
 	return r
 }
