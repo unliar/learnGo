@@ -12,7 +12,7 @@ type PayInfo struct {
 	gorm.Model
 	UID    int64  `gorm:"UNIQUE;NOT NULL" json:"uid"`
 	Alipay string `gorm:"DEFAULT:''" json:"alipay"`
-	TenPay string `gorm:"DEFAULT:''" json:"ten_pay"`
+	TenPay string `gorm:"DEFAULT:''" json:"tenpay"`
 }
 
 func init() {

@@ -28,8 +28,8 @@ type LoinRequest struct {
 }
 type PayInfoRequest struct {
 	UID    int64  `form:"uid" json:"uid"`
-	Alipay string `form:"alipay" json:"alipay" omitempty`
-	TenPay string `form:"tenpay" json:"tenpay" omitempty`
+	Alipay string `form:"alipay" json:"alipay" binding:"required"`
+	TenPay string `form:"tenpay" json:"tenpay" binding:"required"`
 }
 
 // APIRSP api错误返回值
