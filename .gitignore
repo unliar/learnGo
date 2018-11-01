@@ -8,6 +8,7 @@ examples/gp-grpc-blog/vendor/*
 examples/go-micro-account/src/tmp/*
 examples/go-micro-account/src/app
 examples/go-micro-api/tmp/*
+examples/go-react-web/node_modules/*
 examples/go-micro-account/src/vendor/*
 examples/go-micro-pay/tmp/*
 examples/go-micro-api/vendor/github.com/*
