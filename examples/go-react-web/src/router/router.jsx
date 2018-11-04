@@ -1,29 +1,42 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 
+import Reactloadable from 'react-loadable';
 import noMatch from '../pages/noMatch';
-const home = lazy(() => import('../pages/home'));
-const payqr = lazy(() => import('../pages/Showqr'));
-const login = lazy(() => import('../pages/login'));
+// const home = lazy(() => import('../pages/home'));
+// const payqr = lazy(() => import('../pages/Showqr'));
+// const login = Reactloadable({
+//   loader: () => import('../pages/login'),
+//   loading: () => <div />
+// });
 const RouteMap = [
   {
     name: 'home',
     path: '/',
     exact: true,
-    component: home
+    component: Reactloadable({
+      loader: () => import('../pages/home'),
+      loading: () => <div />
+    })
   },
   {
     name: 'payqr',
     path: '/pay/:uid',
     exact: true,
-    component: payqr
+    component: Reactloadable({
+      loader: () => import('../pages/Showqr'),
+      loading: () => <div />
+    })
   },
   {
     name: 'login',
     path: '/login',
     exact: true,
-    component: login
+    component: Reactloadable({
+      loader: () => import('../pages/login'),
+      loading: () => <div />
+    })
   }
 ];
 
@@ -39,7 +52,7 @@ const routes = () => {
                 key={item.name}
                 path={item.path}
                 // 这里的路由有bug....
-                render={props => <item.component {...props} />}
+                component={props => <item.component {...props} />}
               />
             );
           })}
