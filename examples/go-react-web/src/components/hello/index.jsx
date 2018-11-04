@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import PropTypes from 'prop-types';
 import stypes from './index.module.css';
 class Hello extends Component {
   render() {
@@ -12,4 +13,10 @@ class Hello extends Component {
   }
 }
 
+Hello.propTypes = {
+  text: PropTypes.string
+};
+Hello.defaultProps = {
+  text: 'Hello-Component-default-props'
+};
 export default Hello;

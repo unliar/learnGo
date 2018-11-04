@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import Hello from './components/hello';
+import router from './router/router';
 class App extends Component {
   render() {
-    return <Hello text="qaq" />;
+    return router;
   }
 }
 
