@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 class Showqr extends Component {
-  componentWillMount() {}
+  componentWillMount() {
+    console.log(this.props);
+  }
 
   componentDidMount() {}
 
@@ -17,7 +18,13 @@ class Showqr extends Component {
   componentWillUnmount() {}
 
   render() {
-    return <div />;
+    const uid = this.props.match.params.uid;
+    return (
+      <div>
+        hi qr===>
+        {uid}
+      </div>
+    );
   }
 }
 
