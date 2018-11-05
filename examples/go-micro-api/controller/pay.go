@@ -3,9 +3,10 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/unliar/proto/pay"
-	"strconv"
 )
 
 // GetPayInfo 用于获取指定id的支付信息
@@ -62,12 +63,7 @@ func (p *PayController) PostPayInfo(c *gin.Context) {
 		"ErrMsg": "ok",
 		"Result": rsp,
 	})
-	return
 
-	c.JSON(403, gin.H{
-		"Status": 2,
-		"ErrMsg": "have you long in?",
-	})
 }
 
 // UpdatePayInfo 用户更新支付信息

@@ -37,6 +37,15 @@ const RouteMap = [
       loader: () => import('../pages/login'),
       loading: () => <div />
     })
+  },
+  {
+    name: 'userInfo',
+    path: '/users/:uid',
+    exact: true,
+    component: Reactloadable({
+      loader: () => import('../pages/userInfo'),
+      loading: () => <div>...</div>
+    })
   }
 ];
 
