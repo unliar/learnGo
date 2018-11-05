@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 
+import { getPayinfo } from "../api/index"
 class Showqr extends Component {
   componentWillMount() {
-    console.log(this.props);
+    console.log(getPayinfo(1))
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
-  componentWillReceiveProps(nextProps) {}
+  componentWillReceiveProps(nextProps) { }
 
-  shouldComponentUpdate(nextProps, nextState) {}
+  shouldComponentUpdate(nextProps, nextState) { }
 
-  componentWillUpdate(nextProps, nextState) {}
+  componentWillUpdate(nextProps, nextState) { }
 
-  componentDidUpdate(prevProps, prevState) {}
+  componentDidUpdate(prevProps, prevState) { }
 
-  componentWillUnmount() {}
+  componentWillUnmount() { }
 
   render() {
     const uid = this.props.match.params.uid;
