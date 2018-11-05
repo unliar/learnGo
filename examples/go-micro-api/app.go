@@ -1,10 +1,12 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/micro/go-web"
 	"learnGo/examples/go-micro-api/routes"
 	"log"
+	"time"
 )
 
 func main() {
@@ -20,6 +22,12 @@ func main() {
 	service.Init()
 
 	r := gin.Default()
+	// 添加跨域中间件
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 	// 404 error
 	r.NoRoute(func(context *gin.Context) {
 		context.JSON(404, gin.H{
