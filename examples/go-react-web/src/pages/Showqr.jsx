@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import { BrowserQRCodeSvgWriter } from "@zxing/library"
 import qrcode from 'qrcode';
 import { getPayinfo } from '../api/index';
 import { Object } from 'core-js';
