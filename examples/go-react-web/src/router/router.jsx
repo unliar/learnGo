@@ -4,12 +4,10 @@ import { Route, Switch, BrowserRouter as Router, Link } from 'react-router-dom';
 
 import Reactloadable from 'react-loadable';
 import PageNotFound from '../pages/PageNotFound';
-// const home = lazy(() => import('../pages/home'));
-// const payqr = lazy(() => import('../pages/Showqr'));
-// const login = Reactloadable({
-//   loader: () => import('../pages/login'),
-//   loading: () => <div />
-// });
+
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 const RouteMap = [
   {
     name: 'home',
@@ -58,47 +56,54 @@ const RouteMap = [
   }
 ];
 
-const routes = () => {
-  return (
-    <Router>
-      <Suspense fallback={<div>Loading...</div>}>
-        <header>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/users/1">GetUserInfo</Link>
-            </li>
-            <li>
-              <Link to="/get-pay-info/1">GetPayInfo</Link>
-            </li>
-            <li>
-              <Link to="/post-pay-info">PostPayInfo</Link>
-            </li>
-          </ul>
-        </header>
-        <Switch>
-          {RouteMap.map(item => {
-            return (
-              <Route
-                exact={!!item.exact}
-                key={item.name}
-                path={item.path}
-                // 这里的路由有bug....
-                component={props => <item.component {...props} />}
+class r extends React.Component {
+  state = {
+    value: 'index'
+  };
+  ChangeTabValue = (e, v) => {
+    this.setState({ value: v });
+    console.log(v);
+  };
+  render() {
+    return (
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <AppBar position="static">
+            <Tabs value={this.state.value} onChange={this.ChangeTabValue}>
+              <Tab label="首页" value="index" component={Link} to="/" />
+              <Tab
+                label="用户信息"
+                value="info"
+                component={Link}
+                to="/users/1"
               />
-            );
-          })}
-          <Route component={PageNotFound}> </Route>
-        </Switch>
-        <footer>这是你的脚气</footer>
-      </Suspense>
-    </Router>
-  );
-};
+              <Tab
+                label="二维码"
+                value="code"
+                component={Link}
+                to="/get-pay-info/1"
+              />
+            </Tabs>
+          </AppBar>
+          <Switch>
+            {RouteMap.map(item => {
+              return (
+                <Route
+                  exact={!!item.exact}
+                  key={item.name}
+                  path={item.path}
+                  // 这里的路由有bug....
+                  component={props => <item.component {...props} />}
+                />
+              );
+            })}
+            <Route component={PageNotFound}> </Route>
+          </Switch>
+          <footer>这是你的脚气</footer>
+        </Suspense>
+      </Router>
+    );
+  }
+}
 
-export default routes;
+export default r;
