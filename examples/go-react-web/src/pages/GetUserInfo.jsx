@@ -28,7 +28,7 @@ class userInfo extends Component {
           const key = item;
           const value = this.state[key];
           return (
-            <div>
+            <div key={key}>
               {key}:{value}
             </div>
           );

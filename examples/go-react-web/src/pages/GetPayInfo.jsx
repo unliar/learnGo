@@ -9,16 +9,18 @@ class Showqr extends Component {
     Alipay: null,
     TenPay: null,
     AliPayData: null,
-    TenPayData:null,
-
+    TenPayData: null
   };
 
   async componentDidMount() {
     const { data } = await getPayinfo(this.props.match.params.uid);
-    const AliPayData = await qrcode.toDataURL(data.PayInfo.Alipay)
-    const TenPayData= await qrcode.toDataURL(data.PayInfo.TenPay)
-  
-    this.setState(Object.assign(this.state, { ...data.PayInfo, AliPayData, TenPayData}));
+    if (data.Status !== 1) return;
+    const AliPayData = await qrcode.toDataURL(data.PayInfo.Alipay);
+    const TenPayData = await qrcode.toDataURL(data.PayInfo.TenPay);
+
+    this.setState(
+      Object.assign(this.state, { ...data.PayInfo, AliPayData, TenPayData })
+    );
   }
 
   render() {
@@ -36,9 +38,13 @@ class Showqr extends Component {
           TenPay:
           {this.state.TenPay ? this.state.TenPay : <span>无</span>}
         </p>
-        
-        {this.state.AliPayData?<img src={this.state.AliPayData} alt="ali"/>:null}
-        {this.state.TenPayData?<img src={this.state.TenPayData} alt="tenpay"/>:null}
+
+        {this.state.AliPayData ? (
+          <img src={this.state.AliPayData} alt="ali" />
+        ) : null}
+        {this.state.TenPayData ? (
+          <img src={this.state.TenPayData} alt="tenpay" />
+        ) : null}
       </div>
     );
   }

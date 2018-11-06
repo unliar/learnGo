@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react';
 
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Switch, BrowserRouter as Router, Link } from 'react-router-dom';
 
 import Reactloadable from 'react-loadable';
-import noMatch from '../pages/noMatch';
+import PageNotFound from '../pages/PageNotFound';
 // const home = lazy(() => import('../pages/home'));
 // const payqr = lazy(() => import('../pages/Showqr'));
 // const login = Reactloadable({
@@ -16,16 +16,25 @@ const RouteMap = [
     path: '/',
     exact: true,
     component: Reactloadable({
-      loader: () => import('../pages/home'),
+      loader: () => import('../pages/Home'),
       loading: () => <div />
     })
   },
   {
-    name: 'payqr',
-    path: '/pay/:uid',
+    name: 'GetPayInfo',
+    path: '/get-pay-info/:uid',
     exact: true,
     component: Reactloadable({
-      loader: () => import('../pages/Showqr'),
+      loader: () => import('../pages/GetPayInfo'),
+      loading: () => <div />
+    })
+  },
+  {
+    name: 'PostPayInfo',
+    path: '/post-pay-info',
+    exact: true,
+    component: Reactloadable({
+      loader: () => import('../pages/PostPayInfo'),
       loading: () => <div />
     })
   },
@@ -34,7 +43,7 @@ const RouteMap = [
     path: '/login',
     exact: true,
     component: Reactloadable({
-      loader: () => import('../pages/login'),
+      loader: () => import('../pages/Login'),
       loading: () => <div />
     })
   },
@@ -43,7 +52,7 @@ const RouteMap = [
     path: '/users/:uid',
     exact: true,
     component: Reactloadable({
-      loader: () => import('../pages/userInfo'),
+      loader: () => import('../pages/GetUserInfo'),
       loading: () => <div>...</div>
     })
   }
@@ -53,6 +62,25 @@ const routes = () => {
   return (
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
+        <header>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/users/1">GetUserInfo</Link>
+            </li>
+            <li>
+              <Link to="/get-pay-info/1">GetPayInfo</Link>
+            </li>
+            <li>
+              <Link to="/post-pay-info">PostPayInfo</Link>
+            </li>
+          </ul>
+        </header>
         <Switch>
           {RouteMap.map(item => {
             return (
@@ -65,8 +93,9 @@ const routes = () => {
               />
             );
           })}
-          <Route component={noMatch}> </Route>
+          <Route component={PageNotFound}> </Route>
         </Switch>
+        <footer>这是你的脚气</footer>
       </Suspense>
     </Router>
   );
