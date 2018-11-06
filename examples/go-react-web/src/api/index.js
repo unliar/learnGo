@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://192.168.31.236:8088';
+axios.defaults.baseURL = 'http://192.168.0.143:8088';
 
 axios.defaults.withCredentials = true;
 

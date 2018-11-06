@@ -15,7 +15,7 @@ class Home extends Component {
             <Link to="/login">login</Link>
           </li>
           <li>
-            <Link to="/pay/:uid">pay</Link>
+            <Link to="/pay/1">pay</Link>
           </li>
         </ul>
       </div>

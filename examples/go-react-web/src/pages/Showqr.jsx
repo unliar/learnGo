@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
 
+import { BrowserQRCodeSvgWriter } from "@zxing/library"
+import qrcode from 'qrcode';
 import { getPayinfo } from '../api/index';
 import { Object } from 'core-js';
 class Showqr extends Component {
   state = {
     UID: null,
     Alipay: null,
-    TenPay: null
+    TenPay: null,
+    AliPayData: null,
+    TenPayData:null,
+
   };
 
   async componentDidMount() {
     const { data } = await getPayinfo(this.props.match.params.uid);
-
-    this.setState(Object.assign(this.state, { ...data.PayInfo }));
+    const AliPayData = await qrcode.toDataURL(data.PayInfo.Alipay)
+    const TenPayData= await qrcode.toDataURL(data.PayInfo.TenPay)
+  
+    this.setState(Object.assign(this.state, { ...data.PayInfo, AliPayData, TenPayData}));
   }
 
   render() {
@@ -30,6 +37,9 @@ class Showqr extends Component {
           TenPay:
           {this.state.TenPay ? this.state.TenPay : <span>无</span>}
         </p>
+        
+        {this.state.AliPayData?<img src={this.state.AliPayData} alt="ali"/>:null}
+        {this.state.TenPayData?<img src={this.state.TenPayData} alt="tenpay"/>:null}
       </div>
     );
   }

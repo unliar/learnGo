@@ -24,7 +24,7 @@ func main() {
 	r := gin.Default()
 	// 添加跨域中间件
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"http://192.168.0.143:3000"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
