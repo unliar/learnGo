@@ -55,7 +55,16 @@ const RouteMap = [
     })
   }
 ];
-
+const styles = {
+  footer: {
+    backgroundColor: '#fff',
+    bottom: '0px',
+    padding: '40px 0',
+    textAlign: 'center',
+    width: '100%',
+    position: 'fixed'
+  }
+};
 class r extends React.Component {
   state = {
     value: 'index'
@@ -99,7 +108,7 @@ class r extends React.Component {
             })}
             <Route component={PageNotFound}> </Route>
           </Switch>
-          <footer>这是你的脚气</footer>
+          <footer style={styles.footer}>曾有容颜惑少年</footer>
         </Suspense>
       </Router>
     );
