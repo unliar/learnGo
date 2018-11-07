@@ -14,13 +14,15 @@ class Showqr extends Component {
 
   async componentDidMount() {
     const { data } = await getPayinfo(this.props.match.params.uid);
-    if (data.Status !== 1) return;
-    const AliPayData = await qrcode.toDataURL(data.PayInfo.Alipay);
-    const TenPayData = await qrcode.toDataURL(data.PayInfo.TenPay);
+    if (data.statusCode !== 200) return;
+    const AliPayData = await qrcode.toDataURL(data.result.PayInfo.Alipay);
+    const TenPayData = await qrcode.toDataURL(data.result.PayInfo.TenPay);
 
-    this.setState(
-      Object.assign(this.state, { ...data.PayInfo, AliPayData, TenPayData })
-    );
+    this.setState({
+      ...data.result.PayInfo,
+      AliPayData,
+      TenPayData
+    });
   }
 
   render() {

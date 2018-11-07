@@ -98,9 +98,9 @@ func (a *AccountController) UpdateUserInfo(c *gin.Context) {
 
 // GetHealthStatus 用于获取服务状态
 func (a *AccountController) GetHealthStatus(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"status":  200,
-		"message": "api server ok",
+	c.JSON(200, &APIRSP{
+		StatusCode: 200,
+		Detail:     "Server Status OK",
 	})
 }
 

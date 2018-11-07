@@ -19,8 +19,8 @@ class userInfo extends Component {
   async componentDidMount() {
     const uid = this.props.match.params.uid;
     const { data } = await getUserInfo(uid);
-    if (data.Status !== 1) return;
-    this.setState(Object.assign(this.state, { ...data.result }));
+    if (data.statusCode !== 200) return;
+    this.setState({ ...data.result });
   }
   render() {
     return (
