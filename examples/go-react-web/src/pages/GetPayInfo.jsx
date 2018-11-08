@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import qrcode from 'qrcode';
 import { getPayinfo } from '../api/index';
-import { Object } from 'core-js';
 class Showqr extends Component {
   state = {
     UID: null,
