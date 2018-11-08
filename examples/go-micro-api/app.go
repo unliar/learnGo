@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
-	"github.com/micro/go-web"
 	"learnGo/examples/go-micro-api/routes"
 	"log"
 	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/micro/go-web"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 	r := gin.Default()
 	// 添加跨域中间件
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://192.168.0.143:3000", "http://localhost:3000", "http://192.168.31.236:3000"},
+		AllowOrigins:     []string{"http://192.168.0.143:3000", "http://localhost:3000", "http://192.168.31.236:3000", "http://127.0.0.1:3000"},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
