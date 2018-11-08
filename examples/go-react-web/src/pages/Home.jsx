@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 class Home extends Component {
   render() {
-    return <div>嗨！首页君</div>;
+    return <div>嗨！首页君 </div>;
   }
 }
 
-export default Home;
+export default connect()(Home);
