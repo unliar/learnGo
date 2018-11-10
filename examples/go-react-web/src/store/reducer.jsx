@@ -1,28 +1,28 @@
 import { getUserInfo } from '../api';
-import { GetUserInfoAction, GetPayInfo, GetUserInfo } from './action';
+import { GetPayInfo, GetUserInfo, GetUserInfoAction } from './action';
 
-// export const GetUserInfoFromRemote = id => async dispatch => {
-//   try {
-//     const { data } = await getUserInfo(id);
-//     await dispatch(GetUserInfoAction(data.result));
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+export const GetUserInfoFromRemote = id => async dispatch => {
+  try {
+    const { data } = await getUserInfo(id);
+    await dispatch(GetUserInfoAction(data.result));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export default async (state = { user: 1 }, action) => {
+export default (state = { User: 1 }, action) => {
   switch (action.type) {
     case GetPayInfo: {
       console.log(111);
       break;
     }
     case GetUserInfo: {
-      console.log(222);
-      break;
+      console.log('GetUserInfo', state, '\n', action);
+      return { User: action.payload.User + state.User || 0 };
     }
     default: {
-      console.log(3333);
-      getUserInfo(1);
+      console.log(state, action);
+      return { state, action };
     }
   }
 };
