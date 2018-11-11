@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux';
 
-import reducer from './reducer';
+import UserInfo from './reducer';
 
-export default createStore(combineReducers({ reducer }));
+export default createStore(combineReducers({ UserInfo }));

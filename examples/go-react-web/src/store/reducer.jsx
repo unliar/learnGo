@@ -17,7 +17,8 @@ export default (state = { User: 1 }, action) => {
       break;
     }
     case GetUserInfo: {
-      console.log('GetUserInfo', state, '\n', action);
+      console.log('GetUserInfo==>state', state);
+      console.log('GetUserInfo==>action',  action);
       return { User: action.payload.User + state.User || 0 };
     }
     default: {

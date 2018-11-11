@@ -9,7 +9,7 @@ class Home extends Component {
 }
 const mapStateToProps = (state, prop) => {
   console.log(state, prop);
-  return { User: state.reducer.User };
+  return { User: state.UserInfo.User };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       console.log('ownProps', ownProps);
       dispatch({
         type: 'GetUserInfo',
-        payload: { User: 1 }
+        payload: { User: 0 }
       });
     }
   };
