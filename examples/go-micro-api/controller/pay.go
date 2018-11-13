@@ -30,9 +30,17 @@ func (p *PayController) GetPayInfo(c *gin.Context) {
 			Result:     nil,
 			Detail:     err.Error(),
 		})
+		
 		return
 	}
-
+	if(rsp.Status == 2){
+		c.JSON(500,&APIRSP{
+			StatusCode:200,
+			Result:rsp,
+			Detail:"not found",
+		})
+		return
+	}
 	c.SecureJSON(200, &APIRSP{
 		StatusCode: 200,
 		Result:     rsp,
