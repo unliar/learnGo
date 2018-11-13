@@ -6,11 +6,13 @@ examples/gp-curl/vendor/*
 examples/gp-grpc-blog/temp/
 examples/gp-grpc-blog/vendor/*
 examples/go-micro-account/src/tmp/*
+examples/go-micro-account/src/src.exe
 examples/go-micro-account/src/app
 examples/go-micro-api/tmp/*
 examples/go-react-web/node_modules/*
 examples/go-micro-account/src/vendor/*
 examples/go-micro-pay/tmp/*
+examples/go-micro-pay/go-micro-pay.exe
 examples/go-micro-api/vendor/github.com/*
 examples/go-micro-api/vendor/golang.org/*
 examples/go-micro-api/vendor/gopkg.in/*
