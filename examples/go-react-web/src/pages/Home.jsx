@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       console.log('ownProps', ownProps);
       dispatch({
         type: 'GetUserInfo',
-        payload: { User: 0 }
+        payload: { User: 1 }
       });
     }
   };

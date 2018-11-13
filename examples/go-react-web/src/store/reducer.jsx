@@ -18,12 +18,12 @@ export default (state = { User: 1 }, action) => {
     }
     case GetUserInfo: {
       console.log('GetUserInfo==>state', state);
-      console.log('GetUserInfo==>action',  action);
+      console.log('GetUserInfo==>action', action);
       return { User: action.payload.User + state.User || 0 };
     }
+    // 默认一定要原封不动的返回初始状态
     default: {
-      console.log(state, action);
-      return { state, action };
+      return state;
     }
   }
 };
