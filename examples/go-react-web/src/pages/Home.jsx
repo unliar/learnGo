@@ -1,23 +1,46 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { getUserInfo } from '../api';
 class Home extends Component {
-  componentDidMount() {}
+  // 页面请求数据调用reducer
+  async componentWillMount() {
+    const { data } = await getUserInfo(1);
+    console.log('send statusCode===>', data);
+    if (data.statusCode == 200) {
+      this.props.hi(data.result);
+    }
+  }
   render() {
-    return <div onClick={this.props.hi}>嗨！首页君 {this.props.User} </div>;
+    return (
+      <div>
+        嗨！首页君 !
+        {Object.keys(this.props.UserInfo).map(item => {
+          return (
+            <div key={item}>
+              {item}={this.props.UserInfo[item]}
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 }
 const mapStateToProps = (state, prop) => {
   console.log(state, prop);
-  return { User: state.home.User };
+  return {
+    UserInfo: {
+      ...state.home
+    }
+  };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    hi: () => {
+    hi: payload => {
       console.log('ownProps', ownProps);
       dispatch({
         type: 'GetUserInfo',
-        payload: { User: 1 }
+        payload: payload
       });
     }
   };
