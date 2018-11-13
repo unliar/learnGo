@@ -9,7 +9,7 @@ class Home extends Component {
 }
 const mapStateToProps = (state, prop) => {
   console.log(state, prop);
-  return { User: state.UserInfo.User };
+  return { User: state.home.User };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {

@@ -1,12 +1,14 @@
-import { getUserInfo } from '../api';
+import { getUserInfo } from '../../api';
 import { GetPayInfo, GetUserInfo, GetUserInfoAction } from './action';
 
-export const GetUserInfoFromRemote = id => async dispatch => {
+export const GetUserInfoFromRemote = async id => {
   try {
     const { data } = await getUserInfo(id);
-    await dispatch(GetUserInfoAction(data.result));
+    console.log('request data', data);
+    return data;
   } catch (error) {
     console.log(error);
+    return {};
   }
 };
 

@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux';
 
-import UserInfo from './reducer';
+import home from './home/reducer';
 
-export default createStore(combineReducers({ UserInfo }));
+export default createStore(combineReducers({ home }));
