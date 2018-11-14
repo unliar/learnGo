@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import qrcode from 'qrcode';
-import { getPayinfo } from '../api/index';
+import api from '../api';
 class Showqr extends Component {
   state = {
     UID: null,
@@ -12,7 +12,7 @@ class Showqr extends Component {
   };
 
   async componentDidMount() {
-    const { data } = await getPayinfo(this.props.match.params.uid);
+    const { data } = await api.pay.getPayInfo(this.props.match.params.uid);
     if (data.statusCode !== 200) return;
     const AliPayData = await qrcode.toDataURL(data.result.PayInfo.Alipay);
     const TenPayData = await qrcode.toDataURL(data.result.PayInfo.TenPay);

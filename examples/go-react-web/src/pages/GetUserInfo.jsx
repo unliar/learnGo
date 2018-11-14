@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getUserInfo } from '../api';
+import api from '../api';
 class userInfo extends Component {
   state = {
     Id: null,
@@ -18,7 +18,7 @@ class userInfo extends Component {
   };
   async componentDidMount() {
     const uid = this.props.match.params.uid;
-    const { data } = await getUserInfo(uid);
+    const { data } = await api.account.getUserInfo(uid);
     if (data.statusCode !== 200) return;
     this.setState({ ...data.result });
   }

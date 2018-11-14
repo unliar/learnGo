@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getUserInfo } from '../api';
+import api from '../api';
 class Home extends Component {
   // 页面请求数据调用reducer
   async componentWillMount() {
-    const { data } = await getUserInfo(1);
+    const { data } = await api.account.getUserInfo(1);
     console.log('send statusCode===>', data);
-    if (data.statusCode == 200) {
+    if (data.statusCode === 200) {
       this.props.hi(data.result);
     }
   }

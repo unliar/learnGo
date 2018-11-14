@@ -1,5 +1,4 @@
-import { getUserInfo } from '../../api';
-import { GetPayInfo, GetUserInfo, GetUserInfoAction } from './action';
+import { GetPayInfo, GetUserInfo } from './action';
 
 export default (state = { Id: 1, Brief: '' }, action) => {
   switch (action.type) {
