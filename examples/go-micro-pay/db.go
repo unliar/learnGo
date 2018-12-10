@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" // msql
+	"learnGo/examples/go-micro-pay/config"
 )
 
 var DB *gorm.DB
@@ -18,7 +19,7 @@ type PayInfo struct {
 func init() {
 	fmt.Println("Pay db init")
 	var err error
-	DB, err = gorm.Open("mysql", "root:MySQL19930224@tcp(127.0.0.1:3306)/go-server?parseTime=true&loc=Local")
+	DB, err = gorm.Open("mysql", config.Config.MySQL)
 	if err != nil {
 		fmt.Println("connect Pay db eror", err.Error())
 	}
@@ -28,6 +29,7 @@ func init() {
 		err := DB.Set("gorm:table_options", "ENGINE=InnoDB").CreateTable(&PayInfo{}).Error
 		if err != nil {
 			fmt.Println("init db err")
+			panic(err)
 		}
 	}
 	fmt.Println("db start success")
