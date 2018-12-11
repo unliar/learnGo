@@ -9,6 +9,8 @@ cp "./config/$1.env.json" "./config/env.json"
 
 echo "copy $1 config file done"
 
-go env
+go version
+
+dep ensure
 
 go build -o go-micro-pay *.go
