@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package pay;
+
+// 用户的支付信息
+message PayInfo {
+    int64 Id            = 1; // 自增id
+    int64 UID           = 2; // 用户id
+    string Alipay       = 3; // 支付宝
+    string TenPay       = 4; // 微信
+}
+
+// 状态
+enum Status {
+    Default             = 0;
+    Ok                  = 1;
+    Failed              = 2;
+}
+
+// 通用响应
+message ResponseStatus{
+    Status Status       = 1;
+    string ErrMsg       = 2; // 错误信息
+    PayInfo PayInfo     = 3;
+}
+
+service PaySV{
+    // 获取用户账户支付信息
+   rpc GetPayInfo(PayInfo) returns (ResponseStatus){}
+   // 创建用户账户支付信息
+   rpc PostPayInfo(PayInfo)returns (ResponseStatus){} 
+   // 更新用户账户支付信息
+   rpc UpdatePayInfo(PayInfo) returns (ResponseStatus){};
+}

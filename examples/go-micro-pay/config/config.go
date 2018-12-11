@@ -3,12 +3,14 @@ package config
 import (
 	"errors"
 	"fmt"
-	"github.com/micro/go-config"
-	"github.com/micro/go-config/source/file"
 	"os"
 	"time"
+
+	config "github.com/micro/go-config"
+	"github.com/micro/go-config/source/file"
 )
 
+// EnvConfig 配置文件类型
 type EnvConfig struct {
 	MySQL            string
 	ServiceName      string
@@ -18,6 +20,7 @@ type EnvConfig struct {
 	RegisterTTL      time.Duration
 }
 
+// Config 配置实例
 var Config EnvConfig
 
 func init() {
@@ -31,5 +34,5 @@ func init() {
 		file.NewSource(
 			file.WithPath(ConfigPath)))
 	config.Scan(&Config)
-	fmt.Println("init config====>",Config,ConfigPath)
+	fmt.Println("init config====>", Config, ConfigPath)
 }
