@@ -300,12 +300,9 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:12d11e16950c135e59f2c01b65e7b0636cda7bf72270dc26de17f4d88c6b6bc9"
+  digest = "1:3beab531acfcad4aa22618fa07c3d2f277c43158ca1df4ed72e87a20dd5222c3"
   name = "github.com/unliar/proto"
-  packages = [
-    ".",
-    "pay",
-  ]
+  packages = ["pay"]
   pruneopts = "UT"
   revision = "870db58f1428d941fe579498c2c990538892320d"
 
@@ -394,7 +391,6 @@
     "github.com/micro/go-config",
     "github.com/micro/go-config/source/file",
     "github.com/micro/go-micro",
-    "github.com/unliar/proto",
     "github.com/unliar/proto/pay",
   ]
   solver-name = "gps-cdcl"
