@@ -8,6 +8,7 @@ message PayInfo {
     int64 UID           = 2; // 用户id
     string Alipay       = 3; // 支付宝
     string TenPay       = 4; // 微信
+    string Intro        = 5; // 备注信息
 }
 
 // 状态

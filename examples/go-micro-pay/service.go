@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 )
 import proto "github.com/unliar/proto/pay"
 
@@ -19,6 +18,7 @@ func (p *Pay) GetPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.Res
 			UID:    result.UID,
 			TenPay: result.TenPay,
 			Alipay: result.Alipay,
+			Intro:  result.Intro,
 		}
 		return nil
 	}
@@ -28,8 +28,7 @@ func (p *Pay) GetPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.Res
 }
 
 func (p *Pay) PostPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.ResponseStatus) error {
-	payInfo := &PayInfo{UID: req.UID, Alipay: req.Alipay, TenPay: req.TenPay}
-	fmt.Println("====>")
+	payInfo := &PayInfo{UID: req.UID, Alipay: req.Alipay, TenPay: req.TenPay, Intro: req.Intro}
 	if err := DB.FirstOrCreate(payInfo, &PayInfo{UID: req.UID}).Error; err != nil {
 		rsp.Status = 2
 		rsp.ErrMsg = err.Error()
@@ -42,6 +41,7 @@ func (p *Pay) PostPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.Re
 		UID:    payInfo.UID,
 		TenPay: payInfo.TenPay,
 		Alipay: payInfo.Alipay,
+		Intro:  payInfo.Intro,
 	}
 	return nil
 }
@@ -50,6 +50,7 @@ func (p *Pay) UpdatePayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.
 	if err := DB.Model(&PayInfo{}).Where(&PayInfo{UID: req.UID}).Updates(map[string]interface{}{
 		"alipay":  req.Alipay,
 		"ten_pay": req.TenPay,
+		"intro":   req.Intro,
 	}).Error; err != nil {
 		rsp.Status = 2
 		rsp.ErrMsg = err.Error()

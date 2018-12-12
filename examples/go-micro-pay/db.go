@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"learnGo/examples/go-micro-pay/config"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" // msql
-	"learnGo/examples/go-micro-pay/config"
 )
 
 var DB *gorm.DB
@@ -14,6 +15,7 @@ type PayInfo struct {
 	UID    int64  `gorm:"UNIQUE;NOT NULL" json:"uid"`
 	Alipay string `gorm:"DEFAULT:''" json:"alipay"`
 	TenPay string `gorm:"DEFAULT:''" json:"tenpay"`
+	Intro  string `gorm:"DEFAULT:''" json:"intro"`
 }
 
 func init() {
