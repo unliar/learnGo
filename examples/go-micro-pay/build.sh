@@ -1,9 +1,10 @@
 #!/bin/bash
 
-FileNameBuildOutPut=go-micro-pay
-
+# 程序名称
+FileNameBuildOutPut=main
+# 工作目录
 WorkDir=app
-
+# 配置目录
 ConfigDir=config
 
 go env
