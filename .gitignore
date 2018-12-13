@@ -13,6 +13,7 @@ examples/go-react-web/node_modules/*
 examples/go-micro-account/src/vendor/*
 examples/go-micro-pay/tmp/*
 examples/go-micro-pay/app/*
+examples/go-micro-account/app/*
 examples/go-micro-pay/go-micro-pay.exe
 examples/go-micro-api/vendor/github.com/*
 examples/go-micro-api/vendor/golang.org/*
