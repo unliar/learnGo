@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"github.com/micro/go-micro/client"
@@ -10,12 +9,6 @@ import (
 	"github.com/micro/go-micro/server"
 	"time"
 )
-
-// CreateMD5 是用来创建md5值的
-func CreateMD5(s, salt string) string {
-	result := s + salt
-	return fmt.Sprintf("%x", md5.Sum([]byte(result)))
-}
 
 // MicroWrapCall 是用来包装rpc client的
 func MicroWrapCall(c client.CallFunc) client.CallFunc {

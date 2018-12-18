@@ -3,86 +3,93 @@ syntax = "proto3";
 package account;
 
 // 用户基础信息
+// 公开信息
 message UserInfo {
-    int64 Id            = 1; // id
-    string LoginName    = 2; // 登录
-    string Nickname     = 3; // 昵称
-    int64 Age           = 4; // 年龄
-    Gender Gender       = 5; // 性别
-    string Avatar       = 6; // 头像
-    string Location     = 7; // 位置
-    string Profession   = 8; // 职业
-    int32  Status       = 9; // 状态
-    string Phone        = 10; // 手机号
-    string Email        = 11; // 邮箱
-    string WeChatId     = 12; // 微信id
-    string QQId         = 13; // qqid
-    string Brief        = 14; // 简介
-    string NationCode   = 15; // 手机号区号
+    int64 Id                        = 1; // id
+    string LoginName                = 2; // 登录
+    string Nickname                 = 3; // 昵称
+    int64 Age                       = 4; // 年龄
+    Gender Gender                   = 5; // 性别
+    string Avatar                   = 6; // 头像
+    string Location                 = 7; // 位置
+    string Profession               = 8; // 职业
+    int32  Status                   = 9; // 状态
+    int64 CreatedAt                 = 10; // 创建时间
+    int64 UpdatedAt                 = 11; // 更新时间
 }
 
-// 更新用户密码请求
-message UpdatePassInput {
-    int64 UID           = 1;
-    string Password     = 2;
+// 用户私密信息
+message UserSecretInfo{
+    int64 UID                       = 1; // 用户id
+    string Email                    = 2; // 邮箱
+    string Phone                    = 3; // 手机号  格式 86-11088888810
+    string WeChatId                 = 4; // 微信id
+    string QQId                     = 5; // qqid
+    string RealName                 = 6; // 真实姓名
 }
 
-// 用户token信息
-message TokenMessage {
-    string Token        = 1;
-    UserInfo UserInfo   = 2;
+// 用户密码信息
+message UserPasswordInfo {
+    int64 UID                       = 1; // 用户uid
+    string Password                 = 2; // 用户加密后的密码
+    int64 CreatedAt                 = 3; // 创建时间
+    int64 UpdatedAt                 = 4; // 更新时间
 }
 
-// 用户的token
-message TokenInput {
-    string Token        = 1;
+// 用户token和账户信息
+message UserInfoWithToken {
+    string Token                    = 1; // 用户token信息
+    UserInfo UserInfo               = 2; // 用户信息
 }
 
 // id查询用户信息
 message UIDInput {
-    int64 UID           = 1; // 用户id
+    int64 UID                       = 1; // 用户id
 }
 
 // 状态
 enum Status {
-    Default             = 0;
-    Ok                  = 1;
-    Failed              = 2;
+    Default                         = 0;
+    Ok                              = 1;
+    Failed                          = 2;
 }
 
 // 性别
 enum Gender{
-    UnKnow              = 0;
-    Male                = 1;
-    Female              = 2;
+    UnKnow                          = 0;
+    Male                            = 1;
+    Female                          = 2;
 
 }
 
 // 通用响应
 message ResponseStatus{
-    Status Status       =1;
-    string ErrMsg       =2; // 错误信息
+    Status Status                   = 1;
+    string ErrMsg                   = 2; // 错误信息
 }
 
-// GetUserInfoByTokenResponse
-message UserInfoByTokenResponse{
-    int64    Status     =1;
-    UserInfo UserInfo   =2;
+
+
+// 验证用户密码输入 client自己判断用的是哪个方式登录的
+message PasswordInput {
+    int64  UID                      = 1;  // 用户id
+    string Password                 = 2;  // 密码
 }
 
-// 验证用户密码输入
-message CheckPasswordInput {
-    string Type         =1;  // 类型
-    string Value        =2;  // 类型对应的值
-    string Password     =3;  // 密码
+// 用户注册 注册不需要任何联系信息 只需要登录名
+message RegisterInfo{
+    string LoginName                = 1; // 登录名
+    string Nickname                 = 2; // 昵称
+    string Password                 = 3; // 密码
 }
+
 service AccountSV {
 
     // 查询用户基础信息
     rpc GetUserInfo (UIDInput) returns (UserInfo){}
 
     // 通过token获取用户信息
-    rpc GetUserInfoByToken (TokenInput) returns (UserInfoByTokenResponse){}
+    rpc GetUserInfoByToken (UserInfoWithToken) returns (UserInfo){}
     
     // 创建用户基础信息
     rpc PostUserInfo (UserInfo) returns (ResponseStatus){}
@@ -91,26 +98,29 @@ service AccountSV {
     rpc UpdateUserInfo (UserInfo) returns (ResponseStatus){}
 
     // 获取用户合法的token
-    rpc GetToken (UserInfo) returns (TokenMessage){}
+    rpc GetToken (UserInfo) returns (UserInfoWithToken){}
 
     // 检查用户Token是否合法
-    rpc CheckToken (TokenInput) returns (ResponseStatus){}
+    rpc CheckToken (UserInfoWithToken) returns (ResponseStatus){}
 
     // 检查用户名是否被使用
     rpc CheckLoginName(UserInfo) returns (ResponseStatus){}
 
     // 检查手机是否被绑定
-    rpc CheckPhone(UserInfo) returns (ResponseStatus){}
+    rpc CheckPhone(UserSecretInfo) returns (ResponseStatus){}
 
     // 检查昵称是否被使用
     rpc CheckNickname(UserInfo) returns (ResponseStatus){}
 
     // 更新用户密码
-    rpc UpdatePassword(UpdatePassInput) returns (ResponseStatus){}
+    rpc UpdatePassword(UserPasswordInfo) returns (ResponseStatus){}
     
     // 用户登录
-    rpc CheckPassword(CheckPasswordInput) returns (UserInfoByTokenResponse){}
+    rpc CheckPassword(PasswordInput) returns (UserInfoWithToken){}
 
     // 用户注册
-    rpc RegisterUserByPassword(CheckPasswordInput) returns (UserInfo){}
+    rpc RegisterUserByPassword(RegisterInfo) returns (UserInfo){}
+
+    // 获取用户的修改密码时间
+    rpc GetUserPasswordUpdatedTime(UIDInput) returns (UserPasswordInfo){}
 }

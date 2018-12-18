@@ -9,13 +9,13 @@ It is generated from these files:
 
 It has these top-level messages:
 	UserInfo
-	UpdatePassInput
-	TokenMessage
-	TokenInput
+	UserSecretInfo
+	UserPasswordInfo
+	UserInfoWithToken
 	UIDInput
 	ResponseStatus
-	UserInfoByTokenResponse
-	CheckPasswordInput
+	PasswordInput
+	RegisterInfo
 */
 package account
 
@@ -51,27 +51,29 @@ type AccountSVService interface {
 	// 查询用户基础信息
 	GetUserInfo(ctx context.Context, in *UIDInput, opts ...client.CallOption) (*UserInfo, error)
 	// 通过token获取用户信息
-	GetUserInfoByToken(ctx context.Context, in *TokenInput, opts ...client.CallOption) (*UserInfoByTokenResponse, error)
+	GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, opts ...client.CallOption) (*UserInfo, error)
 	// 创建用户基础信息
 	PostUserInfo(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 更新用户信息
 	UpdateUserInfo(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 获取用户合法的token
-	GetToken(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*TokenMessage, error)
+	GetToken(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*UserInfoWithToken, error)
 	// 检查用户Token是否合法
-	CheckToken(ctx context.Context, in *TokenInput, opts ...client.CallOption) (*ResponseStatus, error)
+	CheckToken(ctx context.Context, in *UserInfoWithToken, opts ...client.CallOption) (*ResponseStatus, error)
 	// 检查用户名是否被使用
 	CheckLoginName(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 检查手机是否被绑定
-	CheckPhone(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error)
+	CheckPhone(ctx context.Context, in *UserSecretInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 检查昵称是否被使用
 	CheckNickname(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 更新用户密码
-	UpdatePassword(ctx context.Context, in *UpdatePassInput, opts ...client.CallOption) (*ResponseStatus, error)
+	UpdatePassword(ctx context.Context, in *UserPasswordInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 用户登录
-	CheckPassword(ctx context.Context, in *CheckPasswordInput, opts ...client.CallOption) (*UserInfoByTokenResponse, error)
+	CheckPassword(ctx context.Context, in *PasswordInput, opts ...client.CallOption) (*UserInfoWithToken, error)
 	// 用户注册
-	RegisterUserByPassword(ctx context.Context, in *CheckPasswordInput, opts ...client.CallOption) (*UserInfo, error)
+	RegisterUserByPassword(ctx context.Context, in *RegisterInfo, opts ...client.CallOption) (*UserInfo, error)
+	// 获取用户的修改密码时间
+	GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, opts ...client.CallOption) (*UserPasswordInfo, error)
 }
 
 type accountSVService struct {
@@ -102,9 +104,9 @@ func (c *accountSVService) GetUserInfo(ctx context.Context, in *UIDInput, opts .
 	return out, nil
 }
 
-func (c *accountSVService) GetUserInfoByToken(ctx context.Context, in *TokenInput, opts ...client.CallOption) (*UserInfoByTokenResponse, error) {
+func (c *accountSVService) GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, opts ...client.CallOption) (*UserInfo, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.GetUserInfoByToken", in)
-	out := new(UserInfoByTokenResponse)
+	out := new(UserInfo)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -132,9 +134,9 @@ func (c *accountSVService) UpdateUserInfo(ctx context.Context, in *UserInfo, opt
 	return out, nil
 }
 
-func (c *accountSVService) GetToken(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*TokenMessage, error) {
+func (c *accountSVService) GetToken(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*UserInfoWithToken, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.GetToken", in)
-	out := new(TokenMessage)
+	out := new(UserInfoWithToken)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -142,7 +144,7 @@ func (c *accountSVService) GetToken(ctx context.Context, in *UserInfo, opts ...c
 	return out, nil
 }
 
-func (c *accountSVService) CheckToken(ctx context.Context, in *TokenInput, opts ...client.CallOption) (*ResponseStatus, error) {
+func (c *accountSVService) CheckToken(ctx context.Context, in *UserInfoWithToken, opts ...client.CallOption) (*ResponseStatus, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.CheckToken", in)
 	out := new(ResponseStatus)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -162,7 +164,7 @@ func (c *accountSVService) CheckLoginName(ctx context.Context, in *UserInfo, opt
 	return out, nil
 }
 
-func (c *accountSVService) CheckPhone(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error) {
+func (c *accountSVService) CheckPhone(ctx context.Context, in *UserSecretInfo, opts ...client.CallOption) (*ResponseStatus, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.CheckPhone", in)
 	out := new(ResponseStatus)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -182,7 +184,7 @@ func (c *accountSVService) CheckNickname(ctx context.Context, in *UserInfo, opts
 	return out, nil
 }
 
-func (c *accountSVService) UpdatePassword(ctx context.Context, in *UpdatePassInput, opts ...client.CallOption) (*ResponseStatus, error) {
+func (c *accountSVService) UpdatePassword(ctx context.Context, in *UserPasswordInfo, opts ...client.CallOption) (*ResponseStatus, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.UpdatePassword", in)
 	out := new(ResponseStatus)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -192,9 +194,9 @@ func (c *accountSVService) UpdatePassword(ctx context.Context, in *UpdatePassInp
 	return out, nil
 }
 
-func (c *accountSVService) CheckPassword(ctx context.Context, in *CheckPasswordInput, opts ...client.CallOption) (*UserInfoByTokenResponse, error) {
+func (c *accountSVService) CheckPassword(ctx context.Context, in *PasswordInput, opts ...client.CallOption) (*UserInfoWithToken, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.CheckPassword", in)
-	out := new(UserInfoByTokenResponse)
+	out := new(UserInfoWithToken)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -202,9 +204,19 @@ func (c *accountSVService) CheckPassword(ctx context.Context, in *CheckPasswordI
 	return out, nil
 }
 
-func (c *accountSVService) RegisterUserByPassword(ctx context.Context, in *CheckPasswordInput, opts ...client.CallOption) (*UserInfo, error) {
+func (c *accountSVService) RegisterUserByPassword(ctx context.Context, in *RegisterInfo, opts ...client.CallOption) (*UserInfo, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.RegisterUserByPassword", in)
 	out := new(UserInfo)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountSVService) GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, opts ...client.CallOption) (*UserPasswordInfo, error) {
+	req := c.c.NewRequest(c.name, "AccountSV.GetUserPasswordUpdatedTime", in)
+	out := new(UserPasswordInfo)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -218,43 +230,46 @@ type AccountSVHandler interface {
 	// 查询用户基础信息
 	GetUserInfo(context.Context, *UIDInput, *UserInfo) error
 	// 通过token获取用户信息
-	GetUserInfoByToken(context.Context, *TokenInput, *UserInfoByTokenResponse) error
+	GetUserInfoByToken(context.Context, *UserInfoWithToken, *UserInfo) error
 	// 创建用户基础信息
 	PostUserInfo(context.Context, *UserInfo, *ResponseStatus) error
 	// 更新用户信息
 	UpdateUserInfo(context.Context, *UserInfo, *ResponseStatus) error
 	// 获取用户合法的token
-	GetToken(context.Context, *UserInfo, *TokenMessage) error
+	GetToken(context.Context, *UserInfo, *UserInfoWithToken) error
 	// 检查用户Token是否合法
-	CheckToken(context.Context, *TokenInput, *ResponseStatus) error
+	CheckToken(context.Context, *UserInfoWithToken, *ResponseStatus) error
 	// 检查用户名是否被使用
 	CheckLoginName(context.Context, *UserInfo, *ResponseStatus) error
 	// 检查手机是否被绑定
-	CheckPhone(context.Context, *UserInfo, *ResponseStatus) error
+	CheckPhone(context.Context, *UserSecretInfo, *ResponseStatus) error
 	// 检查昵称是否被使用
 	CheckNickname(context.Context, *UserInfo, *ResponseStatus) error
 	// 更新用户密码
-	UpdatePassword(context.Context, *UpdatePassInput, *ResponseStatus) error
+	UpdatePassword(context.Context, *UserPasswordInfo, *ResponseStatus) error
 	// 用户登录
-	CheckPassword(context.Context, *CheckPasswordInput, *UserInfoByTokenResponse) error
+	CheckPassword(context.Context, *PasswordInput, *UserInfoWithToken) error
 	// 用户注册
-	RegisterUserByPassword(context.Context, *CheckPasswordInput, *UserInfo) error
+	RegisterUserByPassword(context.Context, *RegisterInfo, *UserInfo) error
+	// 获取用户的修改密码时间
+	GetUserPasswordUpdatedTime(context.Context, *UIDInput, *UserPasswordInfo) error
 }
 
 func RegisterAccountSVHandler(s server.Server, hdlr AccountSVHandler, opts ...server.HandlerOption) error {
 	type accountSV interface {
 		GetUserInfo(ctx context.Context, in *UIDInput, out *UserInfo) error
-		GetUserInfoByToken(ctx context.Context, in *TokenInput, out *UserInfoByTokenResponse) error
+		GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, out *UserInfo) error
 		PostUserInfo(ctx context.Context, in *UserInfo, out *ResponseStatus) error
 		UpdateUserInfo(ctx context.Context, in *UserInfo, out *ResponseStatus) error
-		GetToken(ctx context.Context, in *UserInfo, out *TokenMessage) error
-		CheckToken(ctx context.Context, in *TokenInput, out *ResponseStatus) error
+		GetToken(ctx context.Context, in *UserInfo, out *UserInfoWithToken) error
+		CheckToken(ctx context.Context, in *UserInfoWithToken, out *ResponseStatus) error
 		CheckLoginName(ctx context.Context, in *UserInfo, out *ResponseStatus) error
-		CheckPhone(ctx context.Context, in *UserInfo, out *ResponseStatus) error
+		CheckPhone(ctx context.Context, in *UserSecretInfo, out *ResponseStatus) error
 		CheckNickname(ctx context.Context, in *UserInfo, out *ResponseStatus) error
-		UpdatePassword(ctx context.Context, in *UpdatePassInput, out *ResponseStatus) error
-		CheckPassword(ctx context.Context, in *CheckPasswordInput, out *UserInfoByTokenResponse) error
-		RegisterUserByPassword(ctx context.Context, in *CheckPasswordInput, out *UserInfo) error
+		UpdatePassword(ctx context.Context, in *UserPasswordInfo, out *ResponseStatus) error
+		CheckPassword(ctx context.Context, in *PasswordInput, out *UserInfoWithToken) error
+		RegisterUserByPassword(ctx context.Context, in *RegisterInfo, out *UserInfo) error
+		GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, out *UserPasswordInfo) error
 	}
 	type AccountSV struct {
 		accountSV
@@ -271,7 +286,7 @@ func (h *accountSVHandler) GetUserInfo(ctx context.Context, in *UIDInput, out *U
 	return h.AccountSVHandler.GetUserInfo(ctx, in, out)
 }
 
-func (h *accountSVHandler) GetUserInfoByToken(ctx context.Context, in *TokenInput, out *UserInfoByTokenResponse) error {
+func (h *accountSVHandler) GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, out *UserInfo) error {
 	return h.AccountSVHandler.GetUserInfoByToken(ctx, in, out)
 }
 
@@ -283,11 +298,11 @@ func (h *accountSVHandler) UpdateUserInfo(ctx context.Context, in *UserInfo, out
 	return h.AccountSVHandler.UpdateUserInfo(ctx, in, out)
 }
 
-func (h *accountSVHandler) GetToken(ctx context.Context, in *UserInfo, out *TokenMessage) error {
+func (h *accountSVHandler) GetToken(ctx context.Context, in *UserInfo, out *UserInfoWithToken) error {
 	return h.AccountSVHandler.GetToken(ctx, in, out)
 }
 
-func (h *accountSVHandler) CheckToken(ctx context.Context, in *TokenInput, out *ResponseStatus) error {
+func (h *accountSVHandler) CheckToken(ctx context.Context, in *UserInfoWithToken, out *ResponseStatus) error {
 	return h.AccountSVHandler.CheckToken(ctx, in, out)
 }
 
@@ -295,7 +310,7 @@ func (h *accountSVHandler) CheckLoginName(ctx context.Context, in *UserInfo, out
 	return h.AccountSVHandler.CheckLoginName(ctx, in, out)
 }
 
-func (h *accountSVHandler) CheckPhone(ctx context.Context, in *UserInfo, out *ResponseStatus) error {
+func (h *accountSVHandler) CheckPhone(ctx context.Context, in *UserSecretInfo, out *ResponseStatus) error {
 	return h.AccountSVHandler.CheckPhone(ctx, in, out)
 }
 
@@ -303,14 +318,18 @@ func (h *accountSVHandler) CheckNickname(ctx context.Context, in *UserInfo, out 
 	return h.AccountSVHandler.CheckNickname(ctx, in, out)
 }
 
-func (h *accountSVHandler) UpdatePassword(ctx context.Context, in *UpdatePassInput, out *ResponseStatus) error {
+func (h *accountSVHandler) UpdatePassword(ctx context.Context, in *UserPasswordInfo, out *ResponseStatus) error {
 	return h.AccountSVHandler.UpdatePassword(ctx, in, out)
 }
 
-func (h *accountSVHandler) CheckPassword(ctx context.Context, in *CheckPasswordInput, out *UserInfoByTokenResponse) error {
+func (h *accountSVHandler) CheckPassword(ctx context.Context, in *PasswordInput, out *UserInfoWithToken) error {
 	return h.AccountSVHandler.CheckPassword(ctx, in, out)
 }
 
-func (h *accountSVHandler) RegisterUserByPassword(ctx context.Context, in *CheckPasswordInput, out *UserInfo) error {
+func (h *accountSVHandler) RegisterUserByPassword(ctx context.Context, in *RegisterInfo, out *UserInfo) error {
 	return h.AccountSVHandler.RegisterUserByPassword(ctx, in, out)
+}
+
+func (h *accountSVHandler) GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, out *UserPasswordInfo) error {
+	return h.AccountSVHandler.GetUserPasswordUpdatedTime(ctx, in, out)
 }

@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/micro/go-micro/errors"
-	"github.com/satori/go.uuid"
-	"learnGo/examples/go-micro-account/utils"
+	"learnGo/examples/go-micro-account/config"
 	"strconv"
 	"time"
 
@@ -14,8 +13,8 @@ import (
 )
 
 // SignKey 用于token签名
-var SignKey = []byte("hikey")
-var MD5Key = "hi-md5"
+var SignKey = []byte(config.Config.JWTTokenKey + config.Config.Env)
+var MD5Key = config.Config.MD5Key + config.Config.Env
 
 // Account 账户模块
 type Account struct {
@@ -70,7 +69,7 @@ func (a *Account) UpdateUserInfo(ctx context.Context, req *proto.UserInfo, rsp *
 }
 
 // GetToken 是用来获取合法token的接口
-func (a *Account) GetToken(ctx context.Context, req *proto.UserInfo, rsp *proto.TokenMessage) error {
+func (a *Account) GetToken(ctx context.Context, req *proto.UserInfo, rsp *proto.UserInfoWithToken) error {
 	claims := Payload{
 		req.GetId(),
 		req.GetStatus(),
@@ -88,7 +87,7 @@ func (a *Account) GetToken(ctx context.Context, req *proto.UserInfo, rsp *proto.
 }
 
 // CheckToken 是用来检测用户token
-func (a *Account) CheckToken(ctx context.Context, req *proto.TokenInput, rsp *proto.ResponseStatus) error {
+func (a *Account) CheckToken(ctx context.Context, req *proto.UserInfoWithToken, rsp *proto.ResponseStatus) error {
 
 	token, err := jwt.ParseWithClaims(req.Token, &Payload{}, func(token *jwt.Token) (interface{}, error) {
 		return SignKey, nil
@@ -124,7 +123,7 @@ func (a *Account) CheckNickname(ctx context.Context, req *proto.UserInfo, rsp *p
 }
 
 // UpdatePassword 是更新用户密码的接口
-func (a *Account) UpdatePassword(ctx context.Context, req *proto.UpdatePassInput, rsp *proto.ResponseStatus) error {
+func (a *Account) UpdatePassword(ctx context.Context, req *proto.UserPasswordInfo, rsp *proto.ResponseStatus) error {
 	result := &UserPass{Password: req.GetPassword()}
 	if r := DB.Model(result).Where("uid = ?", req.GetUID()).Updates(result).RowsAffected; r > 0 {
 		rsp.Status = proto.Status_Ok
@@ -151,8 +150,8 @@ func (a *Account) CheckLoginName(ctx context.Context, req *proto.UserInfo, rsp *
 }
 
 // CheckPhone 是检查手机号的接口
-func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
-	result := &proto.UserInfo{Phone: req.GetPhone()}
+func (a *Account) CheckPhone(ctx context.Context, req *proto.UserSecretInfo, rsp *proto.ResponseStatus) error {
+	result := &proto.UserSecretInfo{Phone: req.GetPhone()}
 	if r := DB.First(result).First(result).RowsAffected; r > 0 {
 		rsp.Status = 2
 		rsp.ErrMsg = "the phone is used"
@@ -164,7 +163,7 @@ func (a *Account) CheckPhone(ctx context.Context, req *proto.UserInfo, rsp *prot
 }
 
 // GetUserInfoByToken 是用token获取用户信息的接口
-func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput, rsp *proto.UserInfoByTokenResponse) error {
+func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.UserInfoWithToken, rsp *proto.UserInfo) error {
 	// 检测token
 	token, _ := jwt.ParseWithClaims(req.GetToken(), &Payload{}, func(token *jwt.Token) (interface{}, error) {
 		return SignKey, nil
@@ -172,96 +171,27 @@ func (a *Account) GetUserInfoByToken(ctx context.Context, req *proto.TokenInput,
 	// token 合法--->获取用户信息
 	if claims, ok := token.Claims.(*Payload); ok && token.Valid {
 		fmt.Println(claims.UID, claims.Status, claims)
-		rsp.Status = 1
 		result := &proto.UserInfo{}
 		DB.First(result, claims.UID)
-		rsp.UserInfo = result
+		rsp = result
 		return nil
 	}
-	// 用id获取信息
-	rsp.Status = 2
-	rsp.UserInfo = nil
 	return nil
 }
 
 // CheckPassword 是用于检测账户登录的接口
-func (a *Account) CheckPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.UserInfoByTokenResponse) error {
-	var t string
-	UserInfo := &proto.UserInfo{}
-	PasswordMD5 := utils.CreateMD5(req.Password, MD5Key)
-	switch req.GetType() {
-	case "phone":
-		t = "user_infos.phone = ? AND user_passes.password = ?"
-	case "email":
-		t = "user_infos.email = ? AND user_passes.password = ?"
-	case "loginName":
-		t = "user_infos.login_name = ? AND user_passes.password = ?"
-	default:
-		return errors.BadRequest("400", "not matched type===>%s", req.GetType())
-	}
-	q := "left join user_passes on user_passes.uid = user_infos.id"
-	if r := DB.Model(UserInfo).Joins(q).Where(t, req.GetValue(), PasswordMD5).First(UserInfo).RowsAffected; r > 0 {
-		fmt.Println("CheckPassword db result=============>", UserInfo)
-		rsp.Status = 1
-		rsp.UserInfo = UserInfo
-		return nil
-	}
-	rsp.Status = 2
-	rsp.UserInfo = nil
+func (a *Account) CheckPassword(ctx context.Context, req *proto.PasswordInput, rsp *proto.UserInfoWithToken) error {
+
 	return nil
 }
 
 // RegisterUserByPassword 是用于密码注册的方法
-func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.CheckPasswordInput, rsp *proto.UserInfo) error {
-	// 设置用户信息表
-	User := &UserInfo{}
-	// 生成随机昵称和登录名
-	UUID := uuid.Must(uuid.NewV4(), nil)
-	User.Nickname = fmt.Sprintf("%s", UUID)
-	User.LoginName = fmt.Sprintf("%s", UUID)
-	// 设置密码表
-	Pass := &UserPass{}
-	PasswordMD5 := utils.CreateMD5(req.GetPassword(), MD5Key)
-	Pass.Password = PasswordMD5
-	// 判断手机号 邮箱 登录名是否使用过
-	switch req.GetType() {
-	case "phone":
-		User.Phone = req.GetValue()
-		if r := DB.First(User, "phone = ?", req.GetValue()).RowsAffected; r > 0 {
-			return errors.BadRequest("4001", "%s", "手机已存在")
-		}
+func (a *Account) RegisterUserByPassword(ctx context.Context, req *proto.RegisterInfo, rsp *proto.UserInfo) error {
 
-	case "email":
-		User.Email = req.GetValue()
-		if r := DB.First(User, "email = ?", req.GetValue()).RowsAffected; r > 0 {
-			return errors.BadRequest("4002", "%s", "邮箱已存在")
-		}
+	return nil
+}
 
-	case "LoginName":
-		User.LoginName = req.GetValue()
-		if r := DB.First(User, "login_name = ?", req.GetValue()).RowsAffected; r > 0 {
-			return errors.BadRequest("4003", "%s", "登录名已存在")
-		}
-	default:
-		return errors.BadRequest("400", "type errors ===> %s", req.GetType())
-
-	}
-	// 启动事务操作
-	tx := DB.Begin()
-	if err := tx.Create(User).Error; err != nil {
-		tx.Rollback()
-		return nil
-	}
-	Pass.UID = int64(User.ID)
-	if err := tx.Create(Pass).Error; err != nil {
-		tx.Rollback()
-		return nil
-	}
-	fmt.Print("user====>", User)
-	tx.Commit()
-	rsp.Id = int64(User.ID)
-	rsp.LoginName = User.LoginName
-	rsp.Phone = User.Phone
-	rsp.Email = User.Email
+// GetUserPasswordUpdatedTime 获取用户更新密码的时间
+func (a *Account) GetUserPasswordUpdatedTime(ctx context.Context, req *proto.UIDInput, rsp *proto.UserPasswordInfo) error {
 	return nil
 }

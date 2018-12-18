@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 	"learnGo/examples/go-micro-pay/config"
-	
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" // msql
 )
@@ -41,6 +41,10 @@ func init() {
 	fmt.Println("db start init")
 	var err error
 	DB, err = gorm.Open("mysql", config.Config.MySQL)
+	if err != nil {
+		fmt.Println("db connecting  error")
+		panic(err)
+	}
 	DB.LogMode(true)
 	if !DB.HasTable(&UserInfo{}) {
 		fmt.Println("db UserBase need to create")
@@ -53,6 +57,7 @@ func init() {
 			CreateTable(&UserPass{}).Error
 	}
 	if err != nil {
+		fmt.Println("db table check error")
 		panic(err)
 	}
 	fmt.Println("db init success")
