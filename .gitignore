@@ -19,5 +19,5 @@ examples/go-micro-api/vendor/github.com/*
 examples/go-micro-api/vendor/golang.org/*
 examples/go-micro-api/vendor/gopkg.in/*
 examples/go-micro-api/app
-examples/go-micro-api/app
+examples/go-micro-account/app
 examples/go-micro-push/sender/temp/*
