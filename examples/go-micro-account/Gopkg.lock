@@ -68,15 +68,9 @@
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:4c0989ca0bcd10799064318923b9bc2db6b4d6338dd75f3f2d86c3511aaaf5cf"
+  digest = "1:97df918963298c287643883209a2c3f642e6593379f97ab400c2a2e219ab647d"
   name = "github.com/golang/protobuf"
-  packages = [
-    "proto",
-    "ptypes",
-    "ptypes/any",
-    "ptypes/duration",
-    "ptypes/timestamp",
-  ]
+  packages = ["proto"]
   pruneopts = "UT"
   revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
   version = "v1.2.0"
@@ -314,11 +308,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:32b52b2d34ca3fd8478f9f26ecac95cd222fcd7fc5e74773a9662a0ea4cd222a"
+  digest = "1:5181d109e55827e12661a5d60cfe8fd3d94e8600ccdb881e70ca1ec2e8bbfca6"
   name = "github.com/unliar/proto"
   packages = ["account"]
   pruneopts = "UT"
-  revision = "907a83b9993d7f7b36be1c5bb334ef0afbef589e"
+  revision = "0ecb58f257127c985b2bf8198d5fff9c4f60ccf4"
 
 [[projects]]
   branch = "master"
@@ -333,21 +327,15 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4fb560f83bc18e86007861c107b6f6e2a318aecdde9427555bebd618f309bb3c"
+  digest = "1:f2b50c75156fdaececcfba639d89f1a0c4f6476f7e3eaee49ab758f46003398c"
   name = "golang.org/x/net"
   packages = [
     "bpf",
     "context",
-    "http/httpguts",
-    "http2",
-    "http2/hpack",
-    "idna",
     "internal/iana",
     "internal/socket",
-    "internal/timeseries",
     "ipv4",
     "ipv6",
-    "trace",
   ]
   pruneopts = "UT"
   revision = "04a2e542c03f1d053ab3e4d6e5abcd4b66e2be8e"
@@ -361,83 +349,12 @@
   revision = "fa43e7bc11baaae89f3f902b2b4d832b68234844"
 
 [[projects]]
-  digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
-  name = "golang.org/x/text"
-  packages = [
-    "collate",
-    "collate/build",
-    "internal/colltab",
-    "internal/gen",
-    "internal/tag",
-    "internal/triegen",
-    "internal/ucd",
-    "language",
-    "secure/bidirule",
-    "transform",
-    "unicode/bidi",
-    "unicode/cldr",
-    "unicode/norm",
-    "unicode/rangetable",
-  ]
-  pruneopts = "UT"
-  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
-  version = "v0.3.0"
-
-[[projects]]
   digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
   name = "google.golang.org/appengine"
   packages = ["cloudsql"]
   pruneopts = "UT"
   revision = "ae0ab99deb4dc413a2b4bd6c8bdd0eb67f1e4d06"
   version = "v1.2.0"
-
-[[projects]]
-  branch = "master"
-  digest = "1:077c1c599507b3b3e9156d17d36e1e61928ee9b53a5b420f10f28ebd4a0b275c"
-  name = "google.golang.org/genproto"
-  packages = ["googleapis/rpc/status"]
-  pruneopts = "UT"
-  revision = "a1fde740824669f161e97af4237fb80b8734444d"
-
-[[projects]]
-  digest = "1:9edd250a3c46675d0679d87540b30c9ed253b19bd1fd1af08f4f5fb3c79fc487"
-  name = "google.golang.org/grpc"
-  packages = [
-    ".",
-    "balancer",
-    "balancer/base",
-    "balancer/roundrobin",
-    "binarylog/grpc_binarylog_v1",
-    "codes",
-    "connectivity",
-    "credentials",
-    "credentials/internal",
-    "encoding",
-    "encoding/proto",
-    "grpclog",
-    "internal",
-    "internal/backoff",
-    "internal/binarylog",
-    "internal/channelz",
-    "internal/envconfig",
-    "internal/grpcrand",
-    "internal/grpcsync",
-    "internal/syscall",
-    "internal/transport",
-    "keepalive",
-    "metadata",
-    "naming",
-    "peer",
-    "resolver",
-    "resolver/dns",
-    "resolver/passthrough",
-    "stats",
-    "status",
-    "tap",
-  ]
-  pruneopts = "UT"
-  revision = "df014850f6dee74ba2fc94874043a9f3f75fbfd8"
-  version = "v1.17.0"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
@@ -462,7 +379,6 @@
     "github.com/micro/go-micro/metadata",
     "github.com/micro/go-micro/server",
     "github.com/unliar/proto/account",
-    "google.golang.org/grpc",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

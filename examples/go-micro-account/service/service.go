@@ -3,17 +3,20 @@ package service
 import (
 	"context"
 	"fmt"
-	"github.com/micro/go-micro/errors"
 	"learnGo/examples/go-micro-account/config"
 	"strconv"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/micro/go-micro/errors"
+
+	jwt "github.com/dgrijalva/jwt-go"
 	proto "github.com/unliar/proto/account"
 )
 
 // SignKey 用于token签名
 var SignKey = []byte(config.Config.JWTTokenKey + config.Config.Env)
+
+// MD5Key 用于md5加密
 var MD5Key = config.Config.MD5Key + config.Config.Env
 
 // Account 账户模块

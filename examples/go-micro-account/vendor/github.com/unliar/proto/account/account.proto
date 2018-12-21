@@ -16,6 +16,7 @@ message UserInfo {
     int32  Status                   = 9; // 状态
     int64 CreatedAt                 = 10; // 创建时间
     int64 UpdatedAt                 = 11; // 更新时间
+    string Brief                    = 12; // 简介
 }
 
 // 用户私密信息
@@ -82,7 +83,14 @@ message RegisterInfo{
     string Nickname                 = 2; // 昵称
     string Password                 = 3; // 密码
 }
-
+// 错误码定义 累计7位 账户服务使用 100 [第一位1表示账户模块，第二位表示子模块(表)] ，后四位自由发挥qaq
+// 100
+enum AccountErrors {
+    None                            = 0;  // 默认值
+    UserNotFound                    = 1000001;  // 用户不存在
+    UserCreateFailed                = 1000002;  // 创建用户失败
+    UserUpdateFailed                = 1000003;  // 更新用户失败
+}
 service AccountSV {
 
     // 查询用户基础信息
