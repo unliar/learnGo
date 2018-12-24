@@ -22,3 +22,15 @@ func (a *AccountController) GetUserPasswordUpdatedTime(ctx context.Context, req 
 	rsp.UpdatedAt = r.UpdatedAt
 	return nil
 }
+
+// UpdatePassword 是更新用户密码的接口
+func (a *AccountController) UpdatePassword(ctx context.Context, req *proto.UserPasswordInfo, rsp *proto.ResponseStatus) error {
+
+	return nil
+}
+
+// UpdatePassword 是更新用户密码的接口
+func (a *AccountController) CheckPassword(ctx context.Context, req *proto.PasswordInput, rsp *proto.UserInfoWithToken) error {
+
+	return nil
+}

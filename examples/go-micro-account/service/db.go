@@ -22,12 +22,7 @@ type UserInfo struct {
 	Location   string `gorm:"DEFAULT:'shenzhen'"`
 	Profession string `gorm:"DEFAULT:''"`
 	Status     int64  `gorm:"DEFAULT:1"`
-	Phone      string `gorm:"DEFAULT:''"`
-	Email      string `gorm:"DEFAULT:''"`
-	WeChatId   string `gorm:"DEFAULT:''"`
-	QQId       string `gorm:"DEFAULT:''"`
 	Brief      string `gorm:"DEFAULT:''"`
-	NationCode string `gorm:"DEFAULT:'86'"`
 }
 
 // UserPass 用户密码

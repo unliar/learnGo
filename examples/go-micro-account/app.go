@@ -6,7 +6,7 @@ import (
 	"github.com/micro/go-micro"
 	proto "github.com/unliar/proto/account"
 	"learnGo/examples/go-micro-account/config"
-	SV "learnGo/examples/go-micro-account/service"
+	Controller "learnGo/examples/go-micro-account/controller"
 	"learnGo/examples/go-micro-account/utils"
 	"time"
 )
@@ -26,7 +26,7 @@ func main() {
 
 	service.Init()
 
-	proto.RegisterAccountSVHandler(service.Server(), new(SV.Account))
+	proto.RegisterAccountSVHandler(service.Server(), new(Controller.AccountController))
 
 	err := service.Run()
 
