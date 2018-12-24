@@ -32,6 +32,16 @@ type UserPass struct {
 	Password string `gorm:"NOT NULL"`
 }
 
+// UserSecretInfo
+type UserSecretInfo struct {
+	gorm.Model
+	UID      int64  `gorm:"UNIQUE;NOT NULL;"`
+	Phone    string `gorm:"DEFAULT:''"`
+	WeChatId string `gorm:"DEFAULT:''"`
+	QQId     string `gorm:"DEFAULT:''"`
+	RealName string `gorm:"DEFAULT:''"`
+}
+
 func init() {
 	fmt.Println("db start init")
 	var err error
@@ -50,6 +60,11 @@ func init() {
 		fmt.Println("db UserContact need to create")
 		err = DB.Set("gorm:table_options", "ENGINE=InnoDB").
 			CreateTable(&UserPass{}).Error
+	}
+	if !DB.HasTable(&UserSecretInfo{}) {
+		fmt.Println("db UserSecretInfo need to create")
+		err = DB.Set("gorm:table_options", "ENGINE=InnoDB").
+			CreateTable(&UserSecretInfo{}).Error
 	}
 	if err != nil {
 		fmt.Println("db table check error")
