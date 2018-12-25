@@ -11,5 +11,5 @@ func ConvertToString(e int32) string {
 }
 
 var (
-	UserNotFound = e.BadRequest(ConvertToString(proto.AccountErrors_UserNotFound), "USER NOT FOUND")
+	UserNotFound = e.BadRequest(ConvertToString(proto.AccountErrors_value["None"]), "USER NOT FOUND")
 )

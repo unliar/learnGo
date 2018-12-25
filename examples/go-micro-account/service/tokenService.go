@@ -1,6 +1,9 @@
 package service
 
-import jt "github.com/dgrijalva/jwt-go"
+import (
+	"errors"
+	jt "github.com/dgrijalva/jwt-go"
+)
 
 type TokenPayload struct {
 	UID         int64
@@ -24,6 +27,20 @@ func GeneratorToken(t TokenPayload, k string) (s string, err error) {
 }
 
 // ParseToken 解析token信息
-func ParseToken(k string) (uid int64, err error) {
-	return 0, nil
+func ParseToken(t string, k string) (uid int64, err error) {
+	token, err := jt.ParseWithClaims(t, &TokenPayload{}, func(token *jt.Token) (i interface{}, e error) {
+		return k, nil
+	})
+
+	if err != nil || !token.Valid {
+		return 0, err
+	}
+
+	c, ok := token.Claims.(*TokenPayload)
+
+	if !ok {
+		return 0, errors.New("token.Claims not ok")
+	}
+
+	return c.UID, nil
 }

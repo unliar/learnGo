@@ -2,10 +2,16 @@ package controller
 
 import (
 	"context"
+	proto "github.com/unliar/proto/account"
+	"learnGo/examples/go-micro-account/service"
 )
-import proto "github.com/unliar/proto/account"
 
 func (a *AccountController) GetUserInfo(ctx context.Context, req *proto.UIDInput, res *proto.UserInfo) error {
+	r, err := service.GetUserInfoByUID(req.GetUID())
+	if err != nil {
+		return err
+	}
+	*res = *r
 	return nil
 }
 
