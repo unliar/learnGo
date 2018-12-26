@@ -308,11 +308,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:5181d109e55827e12661a5d60cfe8fd3d94e8600ccdb881e70ca1ec2e8bbfca6"
+  digest = "1:094a0a9a340653f0024ec6adb43b3a47d219b9914af6e856192c9b472d356765"
   name = "github.com/unliar/proto"
   packages = ["account"]
   pruneopts = "UT"
-  revision = "0ecb58f257127c985b2bf8198d5fff9c4f60ccf4"
+  revision = "c65064d4cc10f64c66873d7e672f8ceccecf5c00"
 
 [[projects]]
   branch = "master"
