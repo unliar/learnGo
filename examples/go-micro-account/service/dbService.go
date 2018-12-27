@@ -36,7 +36,7 @@ type UserPass struct {
 type UserSecretInfo struct {
 	gorm.Model
 	UID      int64  `gorm:"UNIQUE;NOT NULL;"`
-	Phone    string `gorm:"DEFAULT:''"`
+	Phone    string `gorm:"UNIQUE;DEFAULT:''"`
 	WeChatId string `gorm:"DEFAULT:''"`
 	QQId     string `gorm:"DEFAULT:''"`
 	RealName string `gorm:"DEFAULT:''"`
