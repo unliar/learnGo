@@ -23,7 +23,13 @@ func PutSecretInfo(u *proto.UserSecretInfo) (*proto.UserSecretInfo, error) {
 
 // PostSecretInfo 用于新增SecretInfo表数据
 func PostSecretInfo(u *proto.UserSecretInfo) (*proto.UserSecretInfo, error) {
-	if r := DB.Where(u).First(u).RowsAffected; r > 0 {
+	if r := DB.Create(&UserSecretInfo{
+		UID:      u.UID,
+		Phone:    u.Phone,
+		Email:    u.Email,
+		QQId:     u.QQId,
+		WeChatId: u.WeChatId,
+		RealName: u.RealName}).RowsAffected; r > 0 {
 		return u, nil
 	}
 	return u, errors.New("no that secretInfo")

@@ -37,6 +37,7 @@ type UserSecretInfo struct {
 	gorm.Model
 	UID      int64  `gorm:"UNIQUE;NOT NULL;"`
 	Phone    string `gorm:"UNIQUE;DEFAULT:''"`
+	Email    string `gorm:"UNIQUE;DEFAULT:''"`
 	WeChatId string `gorm:"DEFAULT:''"`
 	QQId     string `gorm:"DEFAULT:''"`
 	RealName string `gorm:"DEFAULT:''"`
