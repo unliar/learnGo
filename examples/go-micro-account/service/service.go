@@ -26,7 +26,7 @@ type Account struct {
 // Payload 是用来发token的
 type Payload struct {
 	UID    int64 `json:"uid"`
-	Status int32 `json:"userStatus"`
+	Status int64 `json:"userStatus"`
 	jwt.StandardClaims
 }
 

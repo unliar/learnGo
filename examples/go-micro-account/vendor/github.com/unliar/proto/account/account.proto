@@ -13,7 +13,7 @@ message UserInfo {
     string Avatar                   = 6; // 头像
     string Location                 = 7; // 位置
     string Profession               = 8; // 职业
-    int32  Status                   = 9; // 状态
+    int64  Status                   = 9; // 状态
     string Brief                    = 12; // 简介
 }
 
