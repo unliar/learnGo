@@ -6,39 +6,33 @@ import (
 )
 
 // QuerySecretInfo 用于查询SecretInfo表数据
-func GetSecretInfo(u *proto.UserSecretInfo) (*proto.UserSecretInfo, error) {
+func GetSecretInfo(u *UserSecretInfo) (*proto.UserSecretInfo, error) {
 	if r := DB.Where(u).First(u).RowsAffected; r > 0 {
-		return u, nil
+		return u.ToProto(), nil
 	}
-	return u, errors.New("no that secretInfo")
+	return u.ToProto(), errors.New("no that secretInfo")
 }
 
 // PutSecretInfo 用于更新SecretInfo表数据
-func PutSecretInfo(u *proto.UserSecretInfo) (*proto.UserSecretInfo, error) {
+func PutSecretInfo(u *UserSecretInfo) (*proto.UserSecretInfo, error) {
 	if r := DB.Model(&UserSecretInfo{UID: u.UID}).Updates(u).RowsAffected; r > 0 {
-		return u, nil
+		return u.ToProto(), nil
 	}
-	return u, errors.New("no that secretInfo")
+	return u.ToProto(), errors.New("no that secretInfo")
 }
 
 // PostSecretInfo 用于新增SecretInfo表数据
-func PostSecretInfo(u *proto.UserSecretInfo) (*proto.UserSecretInfo, error) {
-	if r := DB.Create(&UserSecretInfo{
-		UID:      u.UID,
-		Phone:    u.Phone,
-		Email:    u.Email,
-		QQId:     u.QQId,
-		WeChatId: u.WeChatId,
-		RealName: u.RealName}).RowsAffected; r > 0 {
-		return u, nil
+func PostSecretInfo(u *UserSecretInfo) (*proto.UserSecretInfo, error) {
+	if r := DB.Create(u).RowsAffected; r > 0 {
+		return u.ToProto(), nil
 	}
-	return u, errors.New("no that secretInfo")
+	return u.ToProto(), errors.New("no that secretInfo")
 }
 
 // DeleteSecretInfo 用于删除SecretInfo表数据
-func DeleteSecretInfo(u *proto.UserSecretInfo) (*proto.UserSecretInfo, error) {
-	if r := DB.Where(u).First(u).RowsAffected; r > 0 {
-		return u, nil
+func DeleteSecretInfo(u *UserSecretInfo) (*proto.UserSecretInfo, error) {
+	if r := DB.Where("UID = ?", u.UID).Delete(&UserSecretInfo{}).RowsAffected; r > 0 {
+		return u.ToProto(), nil
 	}
-	return u, errors.New("no that secretInfo")
+	return u.ToProto(), errors.New("no that secretInfo")
 }
