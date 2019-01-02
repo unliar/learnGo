@@ -7,7 +7,7 @@ import (
 
 // QuerySecretInfo 用于查询SecretInfo表数据
 func GetSecretInfo(u *UserSecretInfo) (*proto.UserSecretInfo, error) {
-	if r := DB.Where(u).First(u).RowsAffected; r > 0 {
+	if r := DB.Where(u).First(u).RecordNotFound(); !r {
 		return u.ToProto(), nil
 	}
 	return u.ToProto(), errors.New("no that secretInfo")

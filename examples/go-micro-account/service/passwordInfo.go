@@ -9,7 +9,7 @@ import (
 func GetUserPasswordInfo(id int64) (*proto.UserPasswordInfo, error) {
 	// db 模型
 	dup := &UserPass{UID: id}
-	if r := DB.Where(dup).First(dup).RowsAffected; r > 0 {
+	if r := DB.Where(dup).First(dup).RecordNotFound(); !r {
 
 		return dup.ToProto(), nil
 	}

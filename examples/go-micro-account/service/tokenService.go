@@ -42,5 +42,9 @@ func ParseToken(t string, k string) (uid int64, err error) {
 		return 0, errors.New("token.Claims not ok")
 	}
 
+	if c.Status != 1 {
+		return 0, errors.New("user status unexpected")
+	}
+
 	return c.UID, nil
 }
