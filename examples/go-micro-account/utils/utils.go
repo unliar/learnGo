@@ -22,11 +22,12 @@ func MicroWrapCall(c client.CallFunc) client.CallFunc {
 
 // LoggerInfo 是service的请求信息
 type LoggerInfo struct {
-	Method  interface{} `json:"method"`
-	Payload interface{} `json:"payload"`
-	Service interface{} `json:"service"`
-	Spend   interface{} `json:"spend"`
-	Meta    interface{} `json:"meta"`
+	Method   interface{} `json:"method"`
+	Payload  interface{} `json:"payload"`
+	Service  interface{} `json:"service"`
+	Spend    interface{} `json:"spend"`
+	Meta     interface{} `json:"meta"`
+	Response interface{} `json:"response"`
 }
 
 // MicroWrapHandler 是用来包装service的
@@ -36,15 +37,17 @@ func MicroWrapHandler(s server.HandlerFunc) server.HandlerFunc {
 		metaData, _ := metadata.FromContext(ctx)
 		err := s(ctx, req, rsp)
 		logger := LoggerInfo{
-			Method:  req.Method(),
-			Payload: req.Request(),
-			Service: req.Service(),
-			Spend:   time.Since(t).String(),
-			Meta:    metaData,
+			Method:   req.Method(),
+			Payload:  req.Request(),
+			Service:  req.Service(),
+			Spend:    time.Since(t).String(),
+			Meta:     metaData,
+			Response: rsp,
 		}
 		s, _ := json.Marshal(logger)
 
 		fmt.Printf("%s", s)
+
 		return err
 	}
 }
