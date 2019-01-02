@@ -91,10 +91,10 @@ enum AccountErrors {
 }
 service AccountSV {
 
-    // 查询用户基础信息
+    // 查询用户基础信息 2019-01-02 done
     rpc GetUserInfo (UIDInput) returns (UserInfo){}
 
-    // 通过token获取用户信息
+    // 通过token获取用户信息  2019-01-02 done
     rpc GetUserInfoByToken (UserInfoWithToken) returns (UserInfo){}
     
     // 创建用户基础信息

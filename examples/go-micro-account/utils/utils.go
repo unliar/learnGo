@@ -28,14 +28,21 @@ type LoggerInfo struct {
 	Spend    interface{} `json:"spend"`
 	Meta     interface{} `json:"meta"`
 	Response interface{} `json:"response"`
+	Error    interface{} `json:"error"`
 }
 
 // MicroWrapHandler 是用来包装service的
 func MicroWrapHandler(s server.HandlerFunc) server.HandlerFunc {
 	return func(ctx context.Context, req server.Request, rsp interface{}) error {
 		t := time.Now()
+
 		metaData, _ := metadata.FromContext(ctx)
+
 		err := s(ctx, req, rsp)
+		errString := ""
+		if err != nil {
+			errString = err.Error()
+		}
 		logger := LoggerInfo{
 			Method:   req.Method(),
 			Payload:  req.Request(),
@@ -43,7 +50,9 @@ func MicroWrapHandler(s server.HandlerFunc) server.HandlerFunc {
 			Spend:    time.Since(t).String(),
 			Meta:     metaData,
 			Response: rsp,
+			Error:    errString,
 		}
+
 		s, _ := json.Marshal(logger)
 
 		fmt.Printf("%s", s)

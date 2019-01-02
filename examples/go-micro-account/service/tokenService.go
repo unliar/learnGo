@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	jt "github.com/dgrijalva/jwt-go"
 )
 
@@ -17,19 +18,20 @@ func GeneratorToken(t TokenPayload, k string) (s string, err error) {
 
 	token := jt.NewWithClaims(jt.SigningMethodHS256, t)
 
-	signedToken, err := token.SignedString(k)
+	SignedToken, err := token.SignedString([]byte(k))
 
 	if err != nil {
-		return "", err
+		fmt.Println("hei error", err)
+		return "", errors.New("generate token faild")
 	}
-	return signedToken, nil
+	return SignedToken, nil
 
 }
 
 // ParseToken 解析token信息
 func ParseToken(t string, k string) (uid int64, err error) {
 	token, err := jt.ParseWithClaims(t, &TokenPayload{}, func(token *jt.Token) (i interface{}, e error) {
-		return k, nil
+		return []byte(k), nil
 	})
 
 	if err != nil || !token.Valid {

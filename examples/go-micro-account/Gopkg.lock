@@ -304,11 +304,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3feaf432a926443e80277d2b9f6ca4009d296932ac344d5f1bdfe7d145cc9733"
+  digest = "1:fdfdecee18e55f0e281e7552a3365dee25bf7c62c9fe26a271f4c17370682b4b"
   name = "github.com/unliar/proto"
   packages = ["account"]
   pruneopts = "UT"
-  revision = "978d1cc45dfb4af144370dac5ec62521084f62a9"
+  revision = "da5c6273e701907ae2ff2c29831e88961ac3f045"
+
+[[projects]]
+  branch = "master"
+  digest = "1:0163565f635b9d23040972c049e44dadd4e017b357a15687fe96f435f3ed72bb"
+  name = "github.com/unliar/utils"
+  packages = ["go/crypto"]
+  pruneopts = "UT"
+  revision = "5216890022bf80a513d10420da799cc150eedbb1"
 
 [[projects]]
   branch = "master"
@@ -337,11 +345,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:5b7594f7c43cb5fc8f31c3f4a9f6a61ee798dbd5fcb36b70cb3d4780aad4c509"
+  digest = "1:5004e851e5eccde563d17871cd9d11c82e2faa578b1a0de81dc74867ad3845a4"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "9a3f9b0469bbc6b8802087ae5c0af9f61502de01"
+  revision = "82a175fd1598e8a172e58ebdf5ed262bb29129e5"
 
 [[projects]]
   digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
@@ -374,6 +382,7 @@
     "github.com/micro/go-micro/metadata",
     "github.com/micro/go-micro/server",
     "github.com/unliar/proto/account",
+    "github.com/unliar/utils/go/crypto",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

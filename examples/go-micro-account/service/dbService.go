@@ -22,7 +22,7 @@ type UserInfo struct {
 	Location   string `gorm:"DEFAULT:'shenzhen'"`
 	Profession string `gorm:"DEFAULT:''"`
 	Status     int64  `gorm:"DEFAULT:1"`
-	Brief      string `gorm:"DEFAULT:''"`
+	Brief      string `gorm:"DEFAULT:'你说的江湖,我曾去过,见过最美的风景,也遇过最难忘的人'"`
 }
 
 // UserPass 用户密码

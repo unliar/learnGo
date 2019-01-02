@@ -3,6 +3,8 @@ package controller
 import (
 	"context"
 	proto "github.com/unliar/proto/account"
+	cpt "github.com/unliar/utils/go/crypto"
+	"learnGo/examples/go-micro-account/config"
 	"learnGo/examples/go-micro-account/service"
 )
 
@@ -23,11 +25,17 @@ func (a *AccountController) GetUserPasswordUpdatedTime(ctx context.Context, req 
 
 // UpdatePassword 是更新用户密码的接口
 func (a *AccountController) UpdatePassword(ctx context.Context, req *proto.UserPasswordInfo, rsp *proto.ResponseStatus) error {
-
+	hash := cpt.GetMD5(req.Password, config.Config.MD5Key)
+	r, err := service.UpdateUserPasswordInfo(&service.UserPass{UID: req.UID, Password: hash})
+	if err != nil {
+		rsp.Status = r.Status
+		return nil
+	}
+	rsp.Status = r.Status
 	return nil
 }
 
-// UpdatePassword 是更新用户密码的接口
+// CheckPassword 是检测用户密码的接口
 func (a *AccountController) CheckPassword(ctx context.Context, req *proto.PasswordInput, rsp *proto.UserInfoWithToken) error {
 
 	return nil
