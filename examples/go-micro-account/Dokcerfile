@@ -1,0 +1,18 @@
+# build env
+
+FROM golang:1.11 as build-env
+
+WORKDIR /user/src/app
+
+COPY . .
+
+RUN ls -lh && pwd
+
+# install dep
+RUN go get -u github.com/golang/dep/cmd/dep
+
+RUN dep ensure -v
+
+
+# golang running time
+
