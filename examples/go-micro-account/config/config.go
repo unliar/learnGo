@@ -22,7 +22,7 @@ type ConfigModel struct {
 
 var Config ConfigModel
 
-func InitConfig() {
+func init() {
 	dir, _ := os.Getwd()
 
 	config.Load(

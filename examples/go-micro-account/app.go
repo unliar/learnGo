@@ -12,8 +12,6 @@ import (
 )
 
 func main() {
-	// 配置初始化
-	config.InitConfig()
 
 	service := micro.NewService(
 		micro.Name(config.Config.ServiceName),

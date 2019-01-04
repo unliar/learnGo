@@ -2,26 +2,27 @@
 
 FROM golang:1.11 as build-env
 
-WORKDIR /user/src/app
+WORKDIR /go/src/learnGo/examples/go-micro-account
 
 COPY . .
 
 RUN ls -lh && pwd
 
 # install dep
-RUN go get -u github.com/golang/dep/cmd/dep
+RUN CGO_ENABLED=1 GOOS=linux go build -o app
 
-RUN dep ensure -v
 
 
 # golang running time
 
-FROM golang:alpine
+FROM ubuntu:18.04
 
 LABEL maintainer="unliar"
 
-WORKDIR /user/src/app
+WORKDIR /usr/src/app
 
-COPY --from=build-env /app /app/
+COPY --from=build-env /go/src/learnGo/examples/go-micro-account/app /usr/src/app
+
+RUN ls -lh && pwd
 
 CMD ["./app"]

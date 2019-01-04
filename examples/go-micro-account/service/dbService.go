@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"learnGo/examples/go-micro-pay/config"
+	"learnGo/examples/go-micro-account/config"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" // msql
