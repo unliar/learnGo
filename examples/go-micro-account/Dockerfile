@@ -16,3 +16,12 @@ RUN dep ensure -v
 
 # golang running time
 
+FROM golang:alpine
+
+LABEL maintainer="unliar"
+
+WORKDIR /user/src/app
+
+COPY --from=build-env /app /app/
+
+CMD ["./app"]
