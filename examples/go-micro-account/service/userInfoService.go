@@ -23,7 +23,7 @@ func GetUserInfo(u *UserInfo) (*proto.UserInfo, error) {
 }
 
 func UpdateUserInfo(u *UserInfo) (*proto.ResponseStatus, error) {
-	if err := DB.Model(u).Where(
+	if r := DB.Model(u).Where(
 		UserInfo{
 			Model: gorm.Model{ID: u.ID},
 		}).Updates(UserInfo{
@@ -31,10 +31,10 @@ func UpdateUserInfo(u *UserInfo) (*proto.ResponseStatus, error) {
 		Age:        u.Age,
 		Gender:     u.Gender,
 		Location:   u.Location,
-		Profession: u.Location,
+		Profession: u.Profession,
 		Brief:      u.Brief,
-	}).Error; err != nil {
-		return &proto.ResponseStatus{Status: 2}, err
+	}).RowsAffected; r <= 0 {
+		return &proto.ResponseStatus{Status: 2}, errors.New("update fail")
 	}
 	return &proto.ResponseStatus{Status: 1}, nil
 }
