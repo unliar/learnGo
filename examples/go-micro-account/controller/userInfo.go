@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/jinzhu/gorm"
 	proto "github.com/unliar/proto/account"
 	"learnGo/examples/go-micro-account/config"
 	"learnGo/examples/go-micro-account/service"
@@ -36,13 +37,30 @@ func (a *AccountController) GetUserInfoByToken(ctx context.Context, req *proto.U
 	return nil
 }
 
-// PostUserInfo 是用来创建用户信息的方法 看起来不会用了
+// PostUserInfo 是用来创建用户信息的方法 不会去实现了
 func (a *AccountController) PostUserInfo(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
 	return nil
 }
 
 // UpdateUserInfo 更新
 func (a *AccountController) UpdateUserInfo(ctx context.Context, req *proto.UserInfo, rsp *proto.ResponseStatus) error {
+
+	u := &service.UserInfo{
+		Model:      gorm.Model{ID: uint(req.Id)},
+		Nickname:   req.Nickname,
+		Age:        req.Age,
+		Gender:     int64(req.Gender),
+		Avatar:     req.Avatar,
+		Location:   req.Location,
+		Profession: req.Profession,
+		Brief:      req.Brief,
+	}
+	r, err := service.UpdateUserInfo(u)
+	if err != nil {
+		rsp.Status = r.Status
+		rsp.ErrMsg = err.Error()
+	}
+	rsp.Status = r.Status
 	return nil
 }
 
