@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	ASV "github.com/unliar/proto/account"
-	"learnGo/examples/go-micro-api/utils"
 	"strconv"
 )
 
@@ -50,41 +49,32 @@ func (a *AccountController) GetUserInfo(c *gin.Context) {
 
 // PostUserInfo 创建用户
 func (a *AccountController) PostUserInfo(c *gin.Context) {
-	var loginRequest LoinRequest
-	if err := c.ShouldBind(&loginRequest); err != nil {
+	params := &RegisterRequest{}
+	if err := c.ShouldBind(params); err != nil {
 		c.JSON(422, &APIRSP{
 			StatusCode: 422,
-			Detail:     "params error",
-			Result:     err,
-		})
-		return
-	}
-	// 登录类型
-	types := []string{"phone", "email", "LoginName"}
-	if !utils.ContainItem(types, c.PostForm("type")) {
-		c.JSON(400, &APIRSP{
-			StatusCode: 422,
-			Detail:     "no match types",
 			Result:     nil,
+			Detail:     err.Error(),
 		})
 		return
 	}
-	data, err := AccountService.RegisterUserByPassword(context.TODO(), &ASV.CheckPasswordInput{
-		Type:     loginRequest.Type,
-		Value:    loginRequest.Value,
-		Password: loginRequest.Password,
+
+	r, err := AccountService.RegisterUserByPassword(context.TODO(), &ASV.RegisterInfo{
+		Nickname:  params.Nickname,
+		LoginName: params.LoginName,
+		Password:  params.Password,
 	})
 	if err != nil {
-		c.JSON(400, &APIRSP{
-			StatusCode: 400,
-			Detail:     err,
+		c.JSON(500, &APIRSP{
+			StatusCode: 422,
 			Result:     nil,
+			Detail:     err.Error(),
 		})
 		return
 	}
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,
-		Result:     data,
+		Result:     r,
 	})
 }
 
@@ -106,113 +96,12 @@ func (a *AccountController) GetHealthStatus(c *gin.Context) {
 
 // PostToken 是用来获取登录token凭证的
 func (a *AccountController) PostToken(c *gin.Context) {
-	V, ok := c.Get("UID")
-	if ok {
-		fmt.Println("uid===>", V)
-	}
-	//判断是刷新还是获取新的token
-	t := c.Query("type")
-	var loginRequest LoinRequest
-	if t == "refresh" {
-		// 获取cookies里的token
-		Token, err := c.Cookie("USER_TOKEN")
-		fmt.Println("isok", Token)
-		if err != nil {
-			c.JSON(403, &APIRSP{
-				StatusCode: 403,
-				Detail:     "NO TOKEN",
-			})
-			return
-		}
 
-		// 获取根据token获取用户信息并且生成新的token
-		rsp, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
-			Token: Token,
-		})
-
-		if err != nil {
-			c.JSON(400, &APIRSP{
-				StatusCode: 403,
-				Detail:     "call CheckToken error ",
-				Result:     err,
-			})
-			return
-		}
-		if rsp.Status != 1 {
-			c.JSON(403, &APIRSP{
-				StatusCode: 403,
-				Detail:     "user staus forbidden",
-				Result:     nil,
-			})
-			return
-		}
-		// 生成新的token
-		tokenMessage, err := AccountService.GetToken(context.TODO(), rsp.UserInfo)
-		if err != nil {
-			c.JSON(400, &APIRSP{
-				StatusCode: 400,
-				Detail:     "GetToken service error",
-				Result:     err,
-			})
-			return
-		}
-		c.SetCookie("USER_TOKEN", tokenMessage.Token, 7200, "/", "", false, false)
-		c.JSON(200, &APIRSP{
-			StatusCode: 200,
-			Detail:     "OK",
-			Result:     tokenMessage,
-		})
-
-		return
-	}
-	// 此时是登录
-
-	if err := c.ShouldBind(&loginRequest); err != nil {
-		c.JSON(400, &APIRSP{
-			StatusCode: 422,
-			Detail:     err.Error(),
-			Result:     nil,
-		})
-		return
-	}
-	// 登录类型
-	types := []string{"phone", "email", "LoginName"}
-	if !utils.ContainItem(types, c.PostForm("type")) {
-		c.JSON(400, &APIRSP{
-			StatusCode: 422,
-			Detail:     "no match types",
-			Result:     nil,
-		})
-		return
-	}
-	resp, err := AccountService.CheckPassword(context.TODO(), &ASV.CheckPasswordInput{
-		Type:     loginRequest.Type,
-		Value:    loginRequest.Value,
-		Password: loginRequest.Password,
-	})
-	fmt.Println("resp====>", resp)
-	if err != nil && resp.Status == 2 {
-		c.JSON(500, &APIRSP{
-			StatusCode: 500,
-			Detail:     err.Error(),
-			Result:     nil,
-		})
-		return
-	}
-	tokenMsg, err := AccountService.GetToken(context.TODO(), resp.UserInfo)
-	if err != nil {
-		c.JSON(500, &APIRSP{
-			StatusCode: 500,
-			Detail:     err.Error(),
-			Result:     nil,
-		})
-		return
-	}
-	c.SetCookie("USER_TOKEN", tokenMsg.Token, 7200, "/", "", false, false)
+	c.SetCookie("USER_TOKEN", "qaq", 7200, "/", "", false, false)
 	c.JSON(400, &APIRSP{
 		StatusCode: 400,
 		Detail:     "hi-PostToken",
-		Result:     resp,
+		Result:     nil,
 	})
 
 }
@@ -234,7 +123,7 @@ func (a *AccountController) GetValueIsUnique(c *gin.Context) {
 
 	switch t {
 	case "phone":
-		rsp, err := AccountService.CheckPhone(context.TODO(), &ASV.UserInfo{
+		rsp, err := AccountService.CheckPhone(context.TODO(), &ASV.UserSecretInfo{
 			Phone: v,
 		})
 		if err != nil {
@@ -307,10 +196,10 @@ func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 				return
 			}
 			// token不为空
-			r, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+			r, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.UserInfoWithToken{
 				Token: token,
 			})
-			if err != nil || r.Status != 1 || r.UserInfo.Status != 1 {
+			if err != nil || r.Status != 1 {
 				fmt.Println("JWTAuth failed")
 				c.AbortWithStatusJSON(403, &APIRSP{
 					StatusCode: 403,
@@ -320,7 +209,7 @@ func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 				return
 			}
 			fmt.Println("hi JWTAuth let you go~")
-			c.Set("UID", r.UserInfo.Id)
+			c.Set("UID", r.Id)
 			c.Next()
 			return
 
@@ -331,10 +220,10 @@ func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 			// token不为空
 			if token != "" {
 				fmt.Println("==>有token")
-				r, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.TokenInput{
+				r, err := AccountService.GetUserInfoByToken(context.TODO(), &ASV.UserInfoWithToken{
 					Token: token,
 				})
-				if err != nil || r.Status != 1 || r.UserInfo.Status != 1 {
+				if err != nil || r.Status != 1 {
 					fmt.Println("JWTAuth failed")
 					c.AbortWithStatusJSON(403, &APIRSP{
 						StatusCode: 403,
@@ -344,7 +233,7 @@ func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 					return
 				}
 				fmt.Println("hi JWTAuth let you go~")
-				c.Set("UID", r.UserInfo.Id)
+				c.Set("UID", r.Id)
 				c.Next()
 				return
 			}

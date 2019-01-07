@@ -32,6 +32,13 @@ type PayInfoRequest struct {
 	TenPay string `form:"tenpay" json:"tenpay" binding:"required"`
 }
 
+// 注册需要的参数
+type RegisterRequest struct {
+	LoginName string `form:"loginName" json:"loginName" binding:"required"` // 登录名
+	Password  string `form:"password" json:"password" binding:"required"`   // 密码
+	Nickname  string `form:"nickname" json:"nickname" binding:"required"`   // 密码
+}
+
 // APIRSP api错误返回值
 type APIRSP struct {
 	StatusCode int64       `json:"statusCode"`

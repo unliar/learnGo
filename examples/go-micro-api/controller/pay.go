@@ -30,14 +30,14 @@ func (p *PayController) GetPayInfo(c *gin.Context) {
 			Result:     nil,
 			Detail:     err.Error(),
 		})
-		
+
 		return
 	}
-	if(rsp.Status == 2){
-		c.JSON(500,&APIRSP{
-			StatusCode:200,
-			Result:rsp,
-			Detail:"not found",
+	if rsp.Status == 2 {
+		c.JSON(500, &APIRSP{
+			StatusCode: 200,
+			Result:     rsp,
+			Detail:     "not found",
 		})
 		return
 	}
@@ -50,9 +50,9 @@ func (p *PayController) GetPayInfo(c *gin.Context) {
 
 // PostPayInfo 用户创建支付信息
 func (p *PayController) PostPayInfo(c *gin.Context) {
-	info := PayInfoRequest{}
+	info := &PayInfoRequest{}
 	info.UID = c.GetInt64("UID")
-	if err := c.ShouldBind(&info); err != nil {
+	if err := c.ShouldBind(info); err != nil {
 		c.JSON(422, &APIRSP{
 			StatusCode: 422,
 			Result:     nil,
