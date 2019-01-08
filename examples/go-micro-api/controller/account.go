@@ -5,16 +5,13 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	ASV "github.com/unliar/proto/account"
-	"strconv"
+	// "strconv"
 )
 
 // GetUserInfo 根据用户id获取账户信息
 func (a *AccountController) GetUserInfo(c *gin.Context) {
-	var err error
-	uid := c.Param("uid")
-	UID, err := strconv.ParseInt(uid, 10, 64)
-
-	if err != nil {
+	uri := &URIUID{}
+	if err := c.ShouldBindUri(uri); err != nil {
 		c.JSON(500, &APIRSP{
 			StatusCode: 400,
 			Detail:     err,
@@ -23,7 +20,7 @@ func (a *AccountController) GetUserInfo(c *gin.Context) {
 	}
 
 	resp, err := AccountService.GetUserInfo(context.TODO(), &ASV.UIDInput{
-		UID: UID,
+		UID: uri.UID,
 	})
 
 	if err != nil {
@@ -34,17 +31,11 @@ func (a *AccountController) GetUserInfo(c *gin.Context) {
 		return
 	}
 
-	if resp.Id == UID {
-		c.JSON(200, &APIRSP{
-			StatusCode: 200,
-			Result:     resp,
-		})
-		return
-	}
-	c.JSON(404, &APIRSP{
-		StatusCode: 404,
-		Detail:     "cant find user by this uid",
+	c.JSON(200, &APIRSP{
+		StatusCode: 200,
+		Result:     resp,
 	})
+	return
 }
 
 // PostUserInfo 创建用户
@@ -96,7 +87,27 @@ func (a *AccountController) GetHealthStatus(c *gin.Context) {
 
 // PostToken 是用来获取登录token凭证的
 func (a *AccountController) PostToken(c *gin.Context) {
+	r := &LoinRequest{}
+	if err := c.ShouldBind(r); err != nil {
+		c.JSON(422, &APIRSP{
+			StatusCode: 422,
+			Detail:     "",
+			Result:     nil,
+		})
+		return
+	}
+	fmt.Println("its login request", r)
+	switch r.Type {
+	case "phone":
+		// 通过用户手机号查询用户信息
+	case "email":
+		// 通过用户邮箱查询用户信息
+	case "loginName":
+		// 通过登录名查询用户信息
 
+	}
+
+	fmt.Println("Header", c.Request.Header)
 	c.SetCookie("USER_TOKEN", "qaq", 7200, "/", "", false, false)
 	c.JSON(400, &APIRSP{
 		StatusCode: 400,
@@ -216,7 +227,7 @@ func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 		}
 		// 可选的token
 		if len(t) > 0 {
-			fmt.Println("当前为可选token")
+			fmt.Println("当前为可选token", token)
 			// token不为空
 			if token != "" {
 				fmt.Println("==>有token")
@@ -224,15 +235,16 @@ func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 					Token: token,
 				})
 				if err != nil || r.Status != 1 {
-					fmt.Println("JWTAuth failed")
-					c.AbortWithStatusJSON(403, &APIRSP{
-						StatusCode: 403,
-						Detail:     err.Error(),
-						Result:     nil,
-					})
+					fmt.Println("JWTAuth failed, but  request pass", err, r)
+					//c.AbortWithStatusJSON(403, &APIRSP{
+					//	StatusCode: 403,
+					//	Detail:     err.Error(),
+					//	Result:     nil,
+					//})
+					c.Next()
 					return
 				}
-				fmt.Println("hi JWTAuth let you go~")
+				fmt.Println("hi JWTAuth pass let you go~")
 				c.Set("UID", r.Id)
 				c.Next()
 				return

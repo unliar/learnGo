@@ -39,6 +39,11 @@ type RegisterRequest struct {
 	Nickname  string `form:"nickname" json:"nickname" binding:"required"`   // 密码
 }
 
+// 地址uid参数
+type URIUID struct {
+	UID int64 `uri:"uid" binding:"required"`
+}
+
 // APIRSP api错误返回值
 type APIRSP struct {
 	StatusCode int64       `json:"statusCode"`
