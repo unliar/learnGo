@@ -32,9 +32,9 @@ require (
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/unliar/proto v0.0.0-20190109160521-81f2cc18dad8
 	github.com/unliar/utils v0.0.0-20190102155751-5216890022bf
-	golang.org/x/crypto v0.0.0-20190102171810-8d7daa0c54b3 // indirect
+	golang.org/x/crypto v0.0.0-20190103213133-ff983b9c42bc // indirect
 	golang.org/x/net v0.0.0-20181220203305-927f97764cc3 // indirect
-	golang.org/x/sys v0.0.0-20190102155601-82a175fd1598 // indirect
+	golang.org/x/sys v0.0.0-20190109145017-48ac38b7c8cb // indirect
 	google.golang.org/appengine v1.4.0 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
