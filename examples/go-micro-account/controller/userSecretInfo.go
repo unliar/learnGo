@@ -18,3 +18,36 @@ func (a *AccountController) CheckPhone(ctx context.Context, req *proto.UserSecre
 	rsp.ErrMsg = "have records"
 	return nil
 }
+
+// GetUserUIDByUserSecretInfo 获取用户的UID
+func (a *AccountController) GetUserUIDByUserSecretInfo(ctx context.Context, req *proto.UserSecretInfo, rsp *proto.UIDInput) error {
+	r, err := service.GetSecretInfo(&service.UserSecretInfo{
+		Phone:    req.Phone,
+		Email:    req.Email,
+		RealName: req.RealName,
+		WeChatId: req.WeChatId,
+		QQId:     req.QQId,
+	})
+	if err != nil {
+		return err
+	}
+	rsp.UID = r.UID
+	return nil
+}
+
+// GetUserInfoByUserSecretInfo 获取用户的信息
+func (a *AccountController) GetUserInfoByUserSecretInfo(ctx context.Context, req *proto.UserSecretInfo, rsp *proto.UserInfo) error {
+	r, err := service.GetSecretInfo(&service.UserSecretInfo{
+		Phone:    req.Phone,
+		Email:    req.Email,
+		RealName: req.RealName,
+		WeChatId: req.WeChatId,
+		QQId:     req.QQId,
+	})
+	if err != nil {
+		return err
+	}
+	u, err := service.GetUserInfoByUID(r.UID)
+	*rsp = *u
+	return nil
+}

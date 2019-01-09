@@ -1,0 +1,113 @@
+# github.com/BurntSushi/toml v0.3.1
+github.com/BurntSushi/toml
+# github.com/bitly/go-simplejson v0.5.0
+github.com/bitly/go-simplejson
+# github.com/dgrijalva/jwt-go v3.2.0+incompatible
+github.com/dgrijalva/jwt-go
+# github.com/fsnotify/fsnotify v1.4.7
+github.com/fsnotify/fsnotify
+# github.com/ghodss/yaml v1.0.0
+github.com/ghodss/yaml
+# github.com/go-log/log v0.1.0
+github.com/go-log/log
+github.com/go-log/log/log
+# github.com/go-sql-driver/mysql v1.4.1
+github.com/go-sql-driver/mysql
+# github.com/golang/protobuf v1.2.0
+github.com/golang/protobuf/proto
+# github.com/google/uuid v1.1.0
+github.com/google/uuid
+# github.com/hashicorp/consul v1.4.0
+github.com/hashicorp/consul/api
+github.com/hashicorp/consul/watch
+# github.com/hashicorp/go-cleanhttp v0.5.0
+github.com/hashicorp/go-cleanhttp
+# github.com/hashicorp/go-rootcerts v0.0.0-20160503143440-6bb64b370b90
+github.com/hashicorp/go-rootcerts
+# github.com/hashicorp/hcl v1.0.0
+github.com/hashicorp/hcl
+github.com/hashicorp/hcl/hcl/ast
+github.com/hashicorp/hcl/hcl/parser
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/hcl/scanner
+github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/json/scanner
+github.com/hashicorp/hcl/json/token
+# github.com/hashicorp/serf v0.8.1
+github.com/hashicorp/serf/coordinate
+# github.com/imdario/mergo v0.3.6
+github.com/imdario/mergo
+# github.com/jinzhu/gorm v1.9.2
+github.com/jinzhu/gorm
+github.com/jinzhu/gorm/dialects/mysql
+# github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a
+github.com/jinzhu/inflection
+# github.com/micro/cli v0.0.0-20181223203424-1b0c9793c300
+github.com/micro/cli
+# github.com/micro/go-config v0.13.1
+github.com/micro/go-config
+github.com/micro/go-config/source/file
+github.com/micro/go-config/loader
+github.com/micro/go-config/loader/memory
+github.com/micro/go-config/reader
+github.com/micro/go-config/reader/json
+github.com/micro/go-config/source
+github.com/micro/go-config/encoder
+github.com/micro/go-config/encoder/hcl
+github.com/micro/go-config/encoder/json
+github.com/micro/go-config/encoder/toml
+github.com/micro/go-config/encoder/xml
+github.com/micro/go-config/encoder/yaml
+# github.com/micro/go-log v0.0.0-20170512141327-cbfa9447f9b6
+github.com/micro/go-log
+# github.com/micro/go-micro v0.12.0
+github.com/micro/go-micro
+github.com/micro/go-micro/errors
+github.com/micro/go-micro/client
+github.com/micro/go-micro/metadata
+github.com/micro/go-micro/server
+github.com/micro/go-micro/broker
+github.com/micro/go-micro/cmd
+github.com/micro/go-micro/registry
+github.com/micro/go-micro/selector
+github.com/micro/go-micro/transport
+github.com/micro/go-micro/codec
+github.com/micro/go-micro/codec/jsonrpc
+github.com/micro/go-micro/codec/protorpc
+github.com/micro/go-micro/server/debug
+github.com/micro/go-micro/broker/codec
+github.com/micro/go-micro/broker/codec/json
+github.com/micro/go-micro/broker/http
+github.com/micro/go-micro/registry/consul
+github.com/micro/go-micro/registry/mdns
+github.com/micro/go-micro/selector/cache
+github.com/micro/go-micro/transport/http
+github.com/micro/go-micro/transport/codec
+github.com/micro/go-micro/server/debug/proto
+# github.com/micro/go-rcache v0.0.0-20180418165751-a581a57b5133
+github.com/micro/go-rcache
+# github.com/micro/mdns v0.0.0-20181201230301-9c3770d4057a
+github.com/micro/mdns
+# github.com/micro/util v0.0.0-20181115195001-2d4f591dc538
+github.com/micro/util/go/lib/addr
+github.com/micro/util/go/lib/net
+github.com/micro/util/go/lib/tls
+# github.com/miekg/dns v1.1.1
+github.com/miekg/dns
+# github.com/mitchellh/go-homedir v1.0.0
+github.com/mitchellh/go-homedir
+# github.com/mitchellh/hashstructure v1.0.0
+github.com/mitchellh/hashstructure
+# github.com/mitchellh/mapstructure v1.1.2
+github.com/mitchellh/mapstructure
+# github.com/pborman/uuid v0.0.0-20180906182336-adf5a7427709
+github.com/pborman/uuid
+# github.com/pkg/errors v0.8.0
+github.com/pkg/errors
+# github.com/unliar/proto v0.0.0-20190109160521-81f2cc18dad8
+github.com/unliar/proto/account
+# github.com/unliar/utils v0.0.0-20190102155751-5216890022bf
+github.com/unliar/utils/go/crypto
+# gopkg.in/yaml.v2 v2.2.2
+gopkg.in/yaml.v2

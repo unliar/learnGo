@@ -24,9 +24,9 @@ import fmt "fmt"
 import math "math"
 
 import (
+	context "context"
 	client "github.com/micro/go-micro/client"
 	server "github.com/micro/go-micro/server"
-	context "context"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -52,7 +52,7 @@ type AccountSVService interface {
 	GetUserInfo(ctx context.Context, in *UIDInput, opts ...client.CallOption) (*UserInfo, error)
 	// 通过token获取用户信息  2019-01-02 done
 	GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, opts ...client.CallOption) (*UserInfo, error)
-	// 创建用户基础信息
+	// 创建用户基础信息 2019-01-05 will not to do
 	PostUserInfo(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 更新用户信息
 	UpdateUserInfo(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*ResponseStatus, error)
@@ -74,6 +74,10 @@ type AccountSVService interface {
 	RegisterUserByPassword(ctx context.Context, in *RegisterInfo, opts ...client.CallOption) (*UserInfo, error)
 	// 获取用户的修改密码时间
 	GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, opts ...client.CallOption) (*UserPasswordInfo, error)
+	// 根据用户私密信息查询用户id
+	GetUserUIDByUserSecretInfo(ctx context.Context, in *UserSecretInfo, opts ...client.CallOption) (*UIDInput, error)
+	// 根据用户私密信息查询用户公开信息
+	GetUserInfoByUserSecretInfo(ctx context.Context, in *UserSecretInfo, opts ...client.CallOption) (*UserInfo, error)
 }
 
 type accountSVService struct {
@@ -224,6 +228,26 @@ func (c *accountSVService) GetUserPasswordUpdatedTime(ctx context.Context, in *U
 	return out, nil
 }
 
+func (c *accountSVService) GetUserUIDByUserSecretInfo(ctx context.Context, in *UserSecretInfo, opts ...client.CallOption) (*UIDInput, error) {
+	req := c.c.NewRequest(c.name, "AccountSV.GetUserUIDByUserSecretInfo", in)
+	out := new(UIDInput)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountSVService) GetUserInfoByUserSecretInfo(ctx context.Context, in *UserSecretInfo, opts ...client.CallOption) (*UserInfo, error) {
+	req := c.c.NewRequest(c.name, "AccountSV.GetUserInfoByUserSecretInfo", in)
+	out := new(UserInfo)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for AccountSV service
 
 type AccountSVHandler interface {
@@ -231,7 +255,7 @@ type AccountSVHandler interface {
 	GetUserInfo(context.Context, *UIDInput, *UserInfo) error
 	// 通过token获取用户信息  2019-01-02 done
 	GetUserInfoByToken(context.Context, *UserInfoWithToken, *UserInfo) error
-	// 创建用户基础信息
+	// 创建用户基础信息 2019-01-05 will not to do
 	PostUserInfo(context.Context, *UserInfo, *ResponseStatus) error
 	// 更新用户信息
 	UpdateUserInfo(context.Context, *UserInfo, *ResponseStatus) error
@@ -253,6 +277,10 @@ type AccountSVHandler interface {
 	RegisterUserByPassword(context.Context, *RegisterInfo, *UserInfo) error
 	// 获取用户的修改密码时间
 	GetUserPasswordUpdatedTime(context.Context, *UIDInput, *UserPasswordInfo) error
+	// 根据用户私密信息查询用户id
+	GetUserUIDByUserSecretInfo(context.Context, *UserSecretInfo, *UIDInput) error
+	// 根据用户私密信息查询用户公开信息
+	GetUserInfoByUserSecretInfo(context.Context, *UserSecretInfo, *UserInfo) error
 }
 
 func RegisterAccountSVHandler(s server.Server, hdlr AccountSVHandler, opts ...server.HandlerOption) error {
@@ -270,6 +298,8 @@ func RegisterAccountSVHandler(s server.Server, hdlr AccountSVHandler, opts ...se
 		CheckPassword(ctx context.Context, in *PasswordInput, out *UserInfoWithToken) error
 		RegisterUserByPassword(ctx context.Context, in *RegisterInfo, out *UserInfo) error
 		GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, out *UserPasswordInfo) error
+		GetUserUIDByUserSecretInfo(ctx context.Context, in *UserSecretInfo, out *UIDInput) error
+		GetUserInfoByUserSecretInfo(ctx context.Context, in *UserSecretInfo, out *UserInfo) error
 	}
 	type AccountSV struct {
 		accountSV
@@ -332,4 +362,12 @@ func (h *accountSVHandler) RegisterUserByPassword(ctx context.Context, in *Regis
 
 func (h *accountSVHandler) GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, out *UserPasswordInfo) error {
 	return h.AccountSVHandler.GetUserPasswordUpdatedTime(ctx, in, out)
+}
+
+func (h *accountSVHandler) GetUserUIDByUserSecretInfo(ctx context.Context, in *UserSecretInfo, out *UIDInput) error {
+	return h.AccountSVHandler.GetUserUIDByUserSecretInfo(ctx, in, out)
+}
+
+func (h *accountSVHandler) GetUserInfoByUserSecretInfo(ctx context.Context, in *UserSecretInfo, out *UserInfo) error {
+	return h.AccountSVHandler.GetUserInfoByUserSecretInfo(ctx, in, out)
 }

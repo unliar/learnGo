@@ -97,7 +97,7 @@ service AccountSV {
     // 通过token获取用户信息  2019-01-02 done
     rpc GetUserInfoByToken (UserInfoWithToken) returns (UserInfo){}
     
-    // 创建用户基础信息
+    // 创建用户基础信息 2019-01-05 will not to do
     rpc PostUserInfo (UserInfo) returns (ResponseStatus){}
 
     // 更新用户信息
@@ -129,4 +129,11 @@ service AccountSV {
 
     // 获取用户的修改密码时间
     rpc GetUserPasswordUpdatedTime(UIDInput) returns (UserPasswordInfo){}
+
+    // 根据用户私密信息查询用户id
+    rpc GetUserUIDByUserSecretInfo (UserSecretInfo) returns (UIDInput){};
+    
+    // 根据用户私密信息查询用户公开信息
+    rpc GetUserInfoByUserSecretInfo (UserSecretInfo) returns (UserInfo){};
+
 }
