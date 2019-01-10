@@ -88,6 +88,7 @@ func (a *AccountController) GetHealthStatus(c *gin.Context) {
 // PostToken 是用来获取登录token凭证的
 func (a *AccountController) PostToken(c *gin.Context) {
 	r := &LoinRequest{}
+	var uid int64
 	if err := c.ShouldBind(r); err != nil {
 		c.JSON(422, &APIRSP{
 			StatusCode: 422,
@@ -98,21 +99,46 @@ func (a *AccountController) PostToken(c *gin.Context) {
 	}
 	fmt.Println("its login request", r)
 	switch r.Type {
-	case "phone":
+	case "phone", "email":
 		// 通过用户手机号查询用户信息
-	case "email":
-		// 通过用户邮箱查询用户信息
+		gr := &ASV.UserSecretInfo{}
+		if r.Type == "phone" {
+			gr.Phone = r.Value
+		} else {
+			gr.Email = r.Value
+		}
+		r, err := AccountService.GetUserInfoByUserSecretInfo(context.TODO(), gr)
+		if err != nil {
+			c.JSON(403, &APIRSP{
+				StatusCode: 403,
+				Detail:     err.Error(),
+				Result:     nil,
+			})
+			return
+		}
+		uid = r.Id
+
 	case "loginName":
 		// 通过登录名查询用户信息
 
 	}
 
-	fmt.Println("Header", c.Request.Header)
-	c.SetCookie("USER_TOKEN", "qaq", 7200, "/", "", false, false)
+	tokenMsg, err := AccountService.GetToken(context.TODO(), &ASV.UserInfo{Id: uid})
+	if err != nil {
+		c.JSON(403, &APIRSP{
+			StatusCode: 403,
+			Detail:     err.Error(),
+			Result:     nil,
+		})
+		return
+	}
+
+	fmt.Println("hei====you are successful login in", tokenMsg)
+	c.SetCookie("USER_TOKEN", tokenMsg.Token, 7200, "/", "", true, true)
 	c.JSON(400, &APIRSP{
 		StatusCode: 400,
 		Detail:     "hi-PostToken",
-		Result:     nil,
+		Result:     tokenMsg,
 	})
 
 }
