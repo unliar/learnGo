@@ -120,6 +120,17 @@ func (a *AccountController) PostToken(c *gin.Context) {
 
 	case "loginName":
 		// 通过登录名查询用户信息
+		u := &ASV.UserInfo{LoginName: r.Value}
+		r, err := AccountService.GetUserInfoByLoginName(context.TODO(), u)
+		if err != nil {
+			c.JSON(403, &APIRSP{
+				StatusCode: 403,
+				Detail:     err.Error(),
+				Result:     nil,
+			})
+			return
+		}
+		uid = r.Id
 
 	}
 
