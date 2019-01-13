@@ -50,6 +50,8 @@ var _ server.Option
 type AccountSVService interface {
 	// 查询用户基础信息 2019-01-02 done
 	GetUserInfo(ctx context.Context, in *UIDInput, opts ...client.CallOption) (*UserInfo, error)
+	//  根据登录名称查询用户信息
+	GetUserInfoByLoginName(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*UserInfo, error)
 	// 通过token获取用户信息  2019-01-02 done
 	GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, opts ...client.CallOption) (*UserInfo, error)
 	// 创建用户基础信息 2019-01-05 will not to do
@@ -100,6 +102,16 @@ func NewAccountSVService(name string, c client.Client) AccountSVService {
 
 func (c *accountSVService) GetUserInfo(ctx context.Context, in *UIDInput, opts ...client.CallOption) (*UserInfo, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.GetUserInfo", in)
+	out := new(UserInfo)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountSVService) GetUserInfoByLoginName(ctx context.Context, in *UserInfo, opts ...client.CallOption) (*UserInfo, error) {
+	req := c.c.NewRequest(c.name, "AccountSV.GetUserInfoByLoginName", in)
 	out := new(UserInfo)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -253,6 +265,8 @@ func (c *accountSVService) GetUserInfoByUserSecretInfo(ctx context.Context, in *
 type AccountSVHandler interface {
 	// 查询用户基础信息 2019-01-02 done
 	GetUserInfo(context.Context, *UIDInput, *UserInfo) error
+	//  根据登录名称查询用户信息
+	GetUserInfoByLoginName(context.Context, *UserInfo, *UserInfo) error
 	// 通过token获取用户信息  2019-01-02 done
 	GetUserInfoByToken(context.Context, *UserInfoWithToken, *UserInfo) error
 	// 创建用户基础信息 2019-01-05 will not to do
@@ -286,6 +300,7 @@ type AccountSVHandler interface {
 func RegisterAccountSVHandler(s server.Server, hdlr AccountSVHandler, opts ...server.HandlerOption) error {
 	type accountSV interface {
 		GetUserInfo(ctx context.Context, in *UIDInput, out *UserInfo) error
+		GetUserInfoByLoginName(ctx context.Context, in *UserInfo, out *UserInfo) error
 		GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, out *UserInfo) error
 		PostUserInfo(ctx context.Context, in *UserInfo, out *ResponseStatus) error
 		UpdateUserInfo(ctx context.Context, in *UserInfo, out *ResponseStatus) error
@@ -314,6 +329,10 @@ type accountSVHandler struct {
 
 func (h *accountSVHandler) GetUserInfo(ctx context.Context, in *UIDInput, out *UserInfo) error {
 	return h.AccountSVHandler.GetUserInfo(ctx, in, out)
+}
+
+func (h *accountSVHandler) GetUserInfoByLoginName(ctx context.Context, in *UserInfo, out *UserInfo) error {
+	return h.AccountSVHandler.GetUserInfoByLoginName(ctx, in, out)
 }
 
 func (h *accountSVHandler) GetUserInfoByToken(ctx context.Context, in *UserInfoWithToken, out *UserInfo) error {

@@ -19,6 +19,15 @@ func (a *AccountController) GetUserInfo(ctx context.Context, req *proto.UIDInput
 	return nil
 }
 
+func (a *AccountController) GetUserInfoByLoginName(ctx context.Context, req *proto.UserInfo, res *proto.UserInfo) error {
+	u := &service.UserInfo{LoginName: req.LoginName}
+	r, err := service.GetUserInfo(u)
+	if err != nil {
+		return err
+	}
+	*res = *r
+	return nil
+}
 func (a *AccountController) GetUserInfoByToken(ctx context.Context, req *proto.UserInfoWithToken, rsp *proto.UserInfo) error {
 	token, tokenKey := req.Token, config.Config.JWTTokenKey
 

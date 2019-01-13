@@ -30,7 +30,7 @@ require (
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/pborman/uuid v0.0.0-20180906182336-adf5a7427709 // indirect
 	github.com/pkg/errors v0.8.0 // indirect
-	github.com/unliar/proto v0.0.0-20190109160521-81f2cc18dad8
+	github.com/unliar/proto v0.0.0-20190113154752-953378efec71
 	github.com/unliar/utils v0.0.0-20190102155751-5216890022bf
 	golang.org/x/crypto v0.0.0-20190103213133-ff983b9c42bc // indirect
 	golang.org/x/net v0.0.0-20181220203305-927f97764cc3 // indirect

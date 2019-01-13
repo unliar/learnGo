@@ -64,6 +64,10 @@ github.com/unliar/proto v0.0.0-20190109153516-bf05c42c5d6e h1:an1Erp8b9oXoRcA0ro
 github.com/unliar/proto v0.0.0-20190109153516-bf05c42c5d6e/go.mod h1:2l4d+OsW7dZfSohxPkm2xWQIo2Ve2uQYWGfYGZiyxK8=
 github.com/unliar/proto v0.0.0-20190109160521-81f2cc18dad8 h1:wn9AaFWc92c2xrKQoHZpLsHq/vPBfGEZFisQAcqoo6U=
 github.com/unliar/proto v0.0.0-20190109160521-81f2cc18dad8/go.mod h1:2l4d+OsW7dZfSohxPkm2xWQIo2Ve2uQYWGfYGZiyxK8=
+github.com/unliar/proto v0.0.0-20190113153501-e5b488883aa9 h1:OR+UpT9yigyCvO2wxux2kkVMis1HQaRIoaPEYPHFMg0=
+github.com/unliar/proto v0.0.0-20190113153501-e5b488883aa9/go.mod h1:2l4d+OsW7dZfSohxPkm2xWQIo2Ve2uQYWGfYGZiyxK8=
+github.com/unliar/proto v0.0.0-20190113154752-953378efec71 h1:Ms3miQh2mHz0ZJOQsyEIep7CYkcSE7agC1jfjUfhNB4=
+github.com/unliar/proto v0.0.0-20190113154752-953378efec71/go.mod h1:2l4d+OsW7dZfSohxPkm2xWQIo2Ve2uQYWGfYGZiyxK8=
 github.com/unliar/utils v0.0.0-20190102155751-5216890022bf h1:anbG+h9T8LYqYZ6dFGavZW/+1QvRHu5zTBebHwfHp6Q=
 github.com/unliar/utils v0.0.0-20190102155751-5216890022bf/go.mod h1:8hBesIfRKnh4NRvi6mwe2xiUjj/+j2muDRz6h4y54hU=
 golang.org/x/crypto v0.0.0-20190102171810-8d7daa0c54b3/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
