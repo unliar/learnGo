@@ -35,12 +35,19 @@ type UserPass struct {
 // UserSecretInfo
 type UserSecretInfo struct {
 	gorm.Model
-	UID      int64  `gorm:"UNIQUE;NOT NULL;"`
-	Phone    string `gorm:"UNIQUE;DEFAULT:''"`
-	Email    string `gorm:"UNIQUE;DEFAULT:''"`
-	WeChatId string `gorm:"DEFAULT:''"`
-	QQId     string `gorm:"DEFAULT:''"`
-	RealName string `gorm:"DEFAULT:''"`
+	UID         int64  `gorm:"UNIQUE;NOT NULL;"`
+	Phone       string `gorm:"UNIQUE;DEFAULT:''"`
+	PhoneCodeID int64  `gorm:"DEFAULT:'1'"`
+	Email       string `gorm:"UNIQUE;DEFAULT:''"`
+	WeChatId    string `gorm:"DEFAULT:''"`
+	QQId        string `gorm:"DEFAULT:''"`
+	RealName    string `gorm:"DEFAULT:''"`
+}
+
+// UserPhoneCode 用户手机号
+type UserPhoneCode struct {
+	gorm.Model
+	NationCode string `gorm:"UNIQUE;DEFAULT:''"`
 }
 
 func init() {
