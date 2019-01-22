@@ -298,3 +298,12 @@ func (a *AccountController) JWTAuth(t ...string) gin.HandlerFunc {
 
 	}
 }
+
+func (a *AccountController) RemoveToken(c *gin.Context) {
+	c.SetCookie("USER_TOKEN", "", 0, "/", "", false, true)
+	c.JSON(200, &APIRSP{
+		StatusCode: 200,
+		Detail:     "remove token",
+		Result:     nil,
+	})
+}

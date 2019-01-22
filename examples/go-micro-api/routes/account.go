@@ -21,5 +21,8 @@ func AccountRouter(r *gin.Engine) *gin.Engine {
 
 	// 创建||刷新登录token 登录逻辑
 	r.POST("/api/account/tokens", ac.JWTAuth("option"), ac.PostToken)
+
+	// 删除token逻辑
+	r.DELETE("/api/account/tokens", ac.RemoveToken)
 	return r
 }
