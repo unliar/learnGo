@@ -11,6 +11,10 @@ import (
 // GetUserInfo 根据用户id获取账户信息
 func (a *AccountController) GetUserInfo(c *gin.Context) {
 	uri := &URIUID{}
+
+	fmt.Println("hei header", c.Request)
+	T, _ := c.Cookie("USER_TOKEN")
+	fmt.Println("hei....token", T)
 	if err := c.ShouldBindUri(uri); err != nil {
 		c.JSON(500, &APIRSP{
 			StatusCode: 400,
@@ -144,10 +148,11 @@ func (a *AccountController) PostToken(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("hei====you are successful login in", tokenMsg)
-	c.SetCookie("USER_TOKEN", tokenMsg.Token, 7200, "/", "", true, true)
-	c.JSON(400, &APIRSP{
-		StatusCode: 400,
+	fmt.Println("hei====you are successful login in", tokenMsg, c.GetHeader("origin"), c.GetHeader("host"))
+	fmt.Println("IT===REQUEST", c.Request)
+	c.SetCookie("USER_TOKEN", tokenMsg.Token, 7200, "/", "", false, true)
+	c.JSON(200, &APIRSP{
+		StatusCode: 200,
 		Detail:     "hi-PostToken",
 		Result:     tokenMsg,
 	})
