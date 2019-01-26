@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	proto "github.com/unliar/proto/account"
+	cpt "github.com/unliar/utils/go/crypto"
 	"learnGo/examples/go-micro-account/config"
 	"learnGo/examples/go-micro-account/service"
+	"strings"
 )
 
 func (a *AccountController) GetUserInfo(ctx context.Context, req *proto.UIDInput, res *proto.UserInfo) error {
@@ -151,7 +153,12 @@ func (a *AccountController) CheckNickname(ctx context.Context, req *proto.UserIn
 
 // CheckLoginName 是用来密码注册的接口
 func (a *AccountController) RegisterUserByPassword(ctx context.Context, req *proto.RegisterInfo, rsp *proto.UserInfo) error {
-
+	var err error
+	ts := strings.TrimSpace(req.Password)
+	hash, err := cpt.HashString(ts)
+	if err != nil {
+		return err
+	}
 	tx := service.DB.Begin()
 
 	u := &service.UserInfo{LoginName: req.LoginName, Nickname: req.Nickname}
@@ -160,11 +167,11 @@ func (a *AccountController) RegisterUserByPassword(ctx context.Context, req *pro
 		return err
 	}
 
-	if err := tx.Create(&service.UserPass{Password: req.Password, UID: int64(u.ID)}).Error; err != nil {
+	if err := tx.Create(&service.UserPass{Password: hash, UID: int64(u.ID)}).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
-	err := tx.Commit().Error
+	err = tx.Commit().Error
 	*rsp = *u.ToProto()
 	return err
 }
