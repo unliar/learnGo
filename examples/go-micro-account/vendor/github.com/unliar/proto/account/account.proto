@@ -125,7 +125,7 @@ service AccountSV {
     rpc UpdatePassword(UserPasswordInfo) returns (ResponseStatus){}
     
     // 用户登录
-    rpc CheckPassword(PasswordInput) returns (UserInfoWithToken){}
+    rpc CheckPassword(PasswordInput) returns (ResponseStatus){}
 
     // 用户注册
     rpc RegisterUserByPassword(RegisterInfo) returns (UserInfo){}

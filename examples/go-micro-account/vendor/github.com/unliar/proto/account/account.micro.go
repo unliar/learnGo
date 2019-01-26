@@ -71,7 +71,7 @@ type AccountSVService interface {
 	// 更新用户密码
 	UpdatePassword(ctx context.Context, in *UserPasswordInfo, opts ...client.CallOption) (*ResponseStatus, error)
 	// 用户登录
-	CheckPassword(ctx context.Context, in *PasswordInput, opts ...client.CallOption) (*UserInfoWithToken, error)
+	CheckPassword(ctx context.Context, in *PasswordInput, opts ...client.CallOption) (*ResponseStatus, error)
 	// 用户注册
 	RegisterUserByPassword(ctx context.Context, in *RegisterInfo, opts ...client.CallOption) (*UserInfo, error)
 	// 获取用户的修改密码时间
@@ -210,9 +210,9 @@ func (c *accountSVService) UpdatePassword(ctx context.Context, in *UserPasswordI
 	return out, nil
 }
 
-func (c *accountSVService) CheckPassword(ctx context.Context, in *PasswordInput, opts ...client.CallOption) (*UserInfoWithToken, error) {
+func (c *accountSVService) CheckPassword(ctx context.Context, in *PasswordInput, opts ...client.CallOption) (*ResponseStatus, error) {
 	req := c.c.NewRequest(c.name, "AccountSV.CheckPassword", in)
-	out := new(UserInfoWithToken)
+	out := new(ResponseStatus)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -286,7 +286,7 @@ type AccountSVHandler interface {
 	// 更新用户密码
 	UpdatePassword(context.Context, *UserPasswordInfo, *ResponseStatus) error
 	// 用户登录
-	CheckPassword(context.Context, *PasswordInput, *UserInfoWithToken) error
+	CheckPassword(context.Context, *PasswordInput, *ResponseStatus) error
 	// 用户注册
 	RegisterUserByPassword(context.Context, *RegisterInfo, *UserInfo) error
 	// 获取用户的修改密码时间
@@ -310,7 +310,7 @@ func RegisterAccountSVHandler(s server.Server, hdlr AccountSVHandler, opts ...se
 		CheckPhone(ctx context.Context, in *UserSecretInfo, out *ResponseStatus) error
 		CheckNickname(ctx context.Context, in *UserInfo, out *ResponseStatus) error
 		UpdatePassword(ctx context.Context, in *UserPasswordInfo, out *ResponseStatus) error
-		CheckPassword(ctx context.Context, in *PasswordInput, out *UserInfoWithToken) error
+		CheckPassword(ctx context.Context, in *PasswordInput, out *ResponseStatus) error
 		RegisterUserByPassword(ctx context.Context, in *RegisterInfo, out *UserInfo) error
 		GetUserPasswordUpdatedTime(ctx context.Context, in *UIDInput, out *UserPasswordInfo) error
 		GetUserUIDByUserSecretInfo(ctx context.Context, in *UserSecretInfo, out *UIDInput) error
@@ -371,7 +371,7 @@ func (h *accountSVHandler) UpdatePassword(ctx context.Context, in *UserPasswordI
 	return h.AccountSVHandler.UpdatePassword(ctx, in, out)
 }
 
-func (h *accountSVHandler) CheckPassword(ctx context.Context, in *PasswordInput, out *UserInfoWithToken) error {
+func (h *accountSVHandler) CheckPassword(ctx context.Context, in *PasswordInput, out *ResponseStatus) error {
 	return h.AccountSVHandler.CheckPassword(ctx, in, out)
 }
 
