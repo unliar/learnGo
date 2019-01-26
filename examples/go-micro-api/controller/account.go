@@ -138,6 +138,15 @@ func (a *AccountController) PostToken(c *gin.Context) {
 
 	}
 
+	checkPassStatus, err := AccountService.CheckPassword(context.TODO(), &ASV.PasswordInput{UID: uid, Password: r.Password})
+	if checkPassStatus.Status != 1 {
+		c.JSON(403, &APIRSP{
+			StatusCode: 403,
+			Detail:     checkPassStatus.ErrMsg,
+			Result:     nil,
+		})
+		return
+	}
 	tokenMsg, err := AccountService.GetToken(context.TODO(), &ASV.UserInfo{Id: uid})
 	if err != nil {
 		c.JSON(403, &APIRSP{
