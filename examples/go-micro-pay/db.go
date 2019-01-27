@@ -13,8 +13,9 @@ var DB *gorm.DB
 type PayInfo struct {
 	gorm.Model
 	UID    int64  `gorm:"UNIQUE;NOT NULL" json:"uid"`
-	Alipay string `gorm:"DEFAULT:''" json:"alipay"`
+	AliPay string `gorm:"DEFAULT:''" json:"alipay"`
 	TenPay string `gorm:"DEFAULT:''" json:"tenpay"`
+	QQPay  string `gorm:"DEFAULT:''" json:"qqpay"`
 	Intro  string `gorm:"DEFAULT:''" json:"intro"`
 }
 
