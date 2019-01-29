@@ -17,7 +17,7 @@ func (p *Pay) GetPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.Res
 		rsp.PayInfo = &proto.PayInfo{
 			UID:    result.UID,
 			TenPay: result.TenPay,
-			Alipay: result.Alipay,
+			Alipay: result.AliPay,
 			Intro:  result.Intro,
 		}
 		return nil
@@ -28,7 +28,7 @@ func (p *Pay) GetPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.Res
 }
 
 func (p *Pay) PostPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.ResponseStatus) error {
-	payInfo := &PayInfo{UID: req.UID, Alipay: req.Alipay, TenPay: req.TenPay, Intro: req.Intro}
+	payInfo := &PayInfo{UID: req.UID, AliPay: req.Alipay, TenPay: req.TenPay, Intro: req.Intro}
 	if err := DB.FirstOrCreate(payInfo, &PayInfo{UID: req.UID}).Error; err != nil {
 		rsp.Status = 2
 		rsp.ErrMsg = err.Error()
@@ -40,7 +40,7 @@ func (p *Pay) PostPayInfo(ctx context.Context, req *proto.PayInfo, rsp *proto.Re
 	rsp.PayInfo = &proto.PayInfo{
 		UID:    payInfo.UID,
 		TenPay: payInfo.TenPay,
-		Alipay: payInfo.Alipay,
+		Alipay: payInfo.AliPay,
 		Intro:  payInfo.Intro,
 	}
 	return nil
