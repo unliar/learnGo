@@ -14,7 +14,7 @@ func (p *PayController) GetPayInfo(c *gin.Context) {
 	uid, err := strconv.ParseInt(c.Param("uid"), 10, 64)
 
 	if err != nil {
-		c.JSON(422, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 422,
 			Result:     nil,
 			Detail:     err.Error(),
@@ -25,7 +25,7 @@ func (p *PayController) GetPayInfo(c *gin.Context) {
 		UID: uid,
 	})
 	if err != nil {
-		c.JSON(400, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 400,
 			Result:     nil,
 			Detail:     err.Error(),
@@ -34,8 +34,8 @@ func (p *PayController) GetPayInfo(c *gin.Context) {
 		return
 	}
 	if rsp.Status == 2 {
-		c.JSON(500, &APIRSP{
-			StatusCode: 200,
+		c.JSON(200, &APIRSP{
+			StatusCode: 404,
 			Result:     rsp,
 			Detail:     "not found",
 		})
@@ -53,7 +53,7 @@ func (p *PayController) PostPayInfo(c *gin.Context) {
 	info := &PayInfoRequest{}
 	info.UID = c.GetInt64("UID")
 	if err := c.ShouldBind(info); err != nil {
-		c.JSON(422, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 422,
 			Result:     nil,
 			Detail:     err.Error(),
@@ -68,7 +68,7 @@ func (p *PayController) PostPayInfo(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(500, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 200,
 			Result:     nil,
 			Detail:     err.Error(),
@@ -88,7 +88,7 @@ func (p *PayController) UpdatePayInfo(c *gin.Context) {
 	info := PayInfoRequest{}
 	info.UID = c.GetInt64("UID")
 	if err := c.ShouldBind(&info); err != nil {
-		c.JSON(422, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 422,
 			Result:     nil,
 			Detail:     err.Error(),
@@ -103,7 +103,7 @@ func (p *PayController) UpdatePayInfo(c *gin.Context) {
 		TenPay: info.TenPay,
 	})
 	if err != nil {
-		c.JSON(400, err)
+		c.JSON(200, err)
 	}
 	c.JSON(200, &APIRSP{
 		StatusCode: 200,

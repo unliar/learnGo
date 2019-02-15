@@ -16,7 +16,7 @@ func (a *AccountController) GetUserInfo(c *gin.Context) {
 	T, _ := c.Cookie("USER_TOKEN")
 	fmt.Println("hei....token", T)
 	if err := c.ShouldBindUri(uri); err != nil {
-		c.JSON(500, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 400,
 			Detail:     err,
 		})
@@ -28,7 +28,7 @@ func (a *AccountController) GetUserInfo(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.JSON(500, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 500,
 			Detail:     err,
 		})
@@ -46,7 +46,7 @@ func (a *AccountController) GetUserInfo(c *gin.Context) {
 func (a *AccountController) PostUserInfo(c *gin.Context) {
 	params := &RegisterRequest{}
 	if err := c.ShouldBind(params); err != nil {
-		c.JSON(422, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 422,
 			Result:     nil,
 			Detail:     err.Error(),
@@ -60,7 +60,7 @@ func (a *AccountController) PostUserInfo(c *gin.Context) {
 		Password:  params.Password,
 	})
 	if err != nil {
-		c.JSON(500, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 422,
 			Result:     nil,
 			Detail:     err.Error(),
@@ -94,7 +94,7 @@ func (a *AccountController) PostToken(c *gin.Context) {
 	r := &LoinRequest{}
 	var uid int64
 	if err := c.ShouldBind(r); err != nil {
-		c.JSON(422, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 422,
 			Detail:     "",
 			Result:     nil,
@@ -113,7 +113,7 @@ func (a *AccountController) PostToken(c *gin.Context) {
 		}
 		r, err := AccountService.GetUserInfoByUserSecretInfo(context.TODO(), gr)
 		if err != nil {
-			c.JSON(403, &APIRSP{
+			c.JSON(200, &APIRSP{
 				StatusCode: 403,
 				Detail:     err.Error(),
 				Result:     nil,
@@ -127,7 +127,7 @@ func (a *AccountController) PostToken(c *gin.Context) {
 		u := &ASV.UserInfo{LoginName: r.Value}
 		r, err := AccountService.GetUserInfoByLoginName(context.TODO(), u)
 		if err != nil {
-			c.JSON(403, &APIRSP{
+			c.JSON(200, &APIRSP{
 				StatusCode: 403,
 				Detail:     err.Error(),
 				Result:     nil,
@@ -140,7 +140,7 @@ func (a *AccountController) PostToken(c *gin.Context) {
 
 	checkPassStatus, err := AccountService.CheckPassword(context.TODO(), &ASV.PasswordInput{UID: uid, Password: r.Password})
 	if err != nil || checkPassStatus.Status != 1 {
-		c.JSON(403, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 403,
 			Detail:     checkPassStatus.ErrMsg,
 			Result:     nil,
@@ -149,7 +149,7 @@ func (a *AccountController) PostToken(c *gin.Context) {
 	}
 	tokenMsg, err := AccountService.GetToken(context.TODO(), &ASV.UserInfo{Id: uid})
 	if err != nil {
-		c.JSON(403, &APIRSP{
+		c.JSON(200, &APIRSP{
 			StatusCode: 403,
 			Detail:     err.Error(),
 			Result:     nil,
